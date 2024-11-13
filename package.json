@@ -1,0 +1,19 @@
+{
+  "name": "casinocepit",
+  "version": "1.0.0",
+  "description": "Trabajo final segundo cuatrimestre: Durdos Facundo, Maldonado Diego, Urbina Alexis",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/readline-sync": "^1.4.8",
+    "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "readline-sync": "^1.4.10"
+  }
+}

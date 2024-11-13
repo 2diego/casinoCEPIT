@@ -1,0 +1,8 @@
+
+/*
+Interfaz
+
+Metodos
+getName
+jugar
+*/
