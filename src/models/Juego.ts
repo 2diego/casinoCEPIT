@@ -1,8 +1,11 @@
+import { Jugador } from "./Jugador";
 
-/*
-Interfaz
-
-Metodos
-getName
-jugar
-*/
+export interface Juego {
+  
+  getNombre(): string;
+  ingresarSaldo(saldo: number): void;
+  retirarSaldo(saldo: number): void;
+  verSaldoDisponible(): number;
+  apostar(monto: number): void;
+  jugar(jugador: Jugador): void;
+}
