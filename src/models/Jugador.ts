@@ -15,15 +15,21 @@ export class Jugador {
   }
 
   public sumarGanancia(saldo: number): void {
+    //agregue validacion
+    if (saldo < 0) {
+      throw new Error("El saldo a sumar no puede ser negativo.");
+    }
     this.monto += saldo;
   }
 
-  public cargarJuego(saldo: number): void {
+  //cargarJuego ahora devuelve boolean para verificar en el juego si se cargo o no
+  public cargarJuego(saldo: number): boolean {
     if (saldo > this.monto) {
-      console.log("No tienes suficiente dinero para apostar");
-      return;
+      console.log("Saldo insuficiente");
+      return false;
     } else {
       this.monto -= saldo;
+      return true;
   }
 }
 
