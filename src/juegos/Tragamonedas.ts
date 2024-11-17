@@ -1,5 +1,6 @@
 import { Jugador } from "../models/Jugador";
 import { Juego } from "../models/Juego";
+import { validarSaldoInicial } from "../utils/utils";
 
 export abstract class Tragamonedas implements Juego {
   private nombre: string;
@@ -34,7 +35,25 @@ export abstract class Tragamonedas implements Juego {
     return this.saldoDisponible;
   }
 
-  //Hice ingresarSaldo public, se puede ingresar cualq saldo y se valida la apuesta
+  public getApuestaMin(): number {
+    return this.apuestaMin;
+  }//agregue getApuestaMin
+
+  public getApuestaMax(): number {
+    return this.apuestaMax;
+  }//agregue getApuestaMax
+
+  public getSimbolos(): string[] {
+    return this.simbolos;
+  }//agregue getSimbolos
+
+  public ingresarSaldoInicial(saldoInicial: number): void {
+    if (saldoInicial < this.getApuestaMin()) {
+      throw new Error("El saldo ingresado no puede ser menor que la apuesta minima.");
+    }
+    this.ingresarSaldo(saldoInicial);
+  }//agregue ingresarSaldo
+
   public ingresarSaldo(saldo: number): void {
     if (saldo < 0) {
       throw new Error("El saldo ingresado no puede ser negativo.");
@@ -49,7 +68,22 @@ export abstract class Tragamonedas implements Juego {
     return saldoRetirar;
   }
 
-  //logica del juego
+  //agregue setSaldoInicial, metodo interno que se usa en jugar() para empezar que seria igual para todos
+  protected setSaldoInicial(jugador: Jugador): void {
+    let saldoInicial: number = validarSaldoInicial(this.getApuestaMin()); //se pide saldo inicial
+    if (saldoInicial === 0) {
+      return;
+    }
+    
+    let cargar: boolean = jugador.cargarJuego(saldoInicial); //se valida que el jugador tenga el monto
+    if (!cargar) {
+      console.log(`\nNo cuenta con saldo suficiente para jugar ${this.getNombre()}.`);
+      return;
+    }
+
+    this.ingresarSaldoInicial(saldoInicial); // se ingresa el saldo inicial al juego
+  }
+
   abstract jugar(jugador: Jugador): void;
   
   //Metodos privados que cambian dependiendo de la logica del juego y se usan en jugar()

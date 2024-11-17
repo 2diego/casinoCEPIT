@@ -28,7 +28,7 @@ export class Casino{
       console.error("Opción inválida. Intente nuevamente.");
       return;
     }
-    const juego = this.juegos[index - 1];
+    const juego: Juego = this.juegos[index - 1];
     juego.jugar(jugador);
   }
 
