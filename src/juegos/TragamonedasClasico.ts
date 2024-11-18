@@ -6,10 +6,25 @@ export class TragamonedasClasico extends Tragamonedas {
 
 
   protected apostar(monto: number): void {
-    throw new Error("Method not implemented.");
+    if(monto < this.getApuestaMin() || monto > this.getApuestaMax()){
+      console.log(`La apuesta debe ser $${this.getApuestaMin()} o $${this.getApuestaMax()}.`);
+    }else{
+      this.setSaldoDisponible(monto);}
+    // throw new Error("Method not implemented.");
   }
   protected calcularPremio(): void {
-    throw new Error("Method not implemented.");
+    // throw new Error("Method not implemented.");
+    let premio:number = 0;
+    if(this.getSimbolos()[0] === this.getSimbolos()[1] && this.getSimbolos()[1] === this.getSimbolos()[2]){
+      premio = this.getApuestaMin() * 3;
+    
+    }else if(this.getSimbolos()[0] === this.getSimbolos()[1] && this.getSimbolos()[1] === this.getSimbolos()[2]){
+      premio = this.getApuestaMax() * 5;
+    }
+    else{
+      premio = 0;
+    }
+    this.ingresarSaldo(premio);
   }
 
   public jugar(jugador: Jugador): void {
@@ -24,6 +39,7 @@ export class TragamonedasClasico extends Tragamonedas {
     let jugando = true;
     while (jugando) {
         //logica del juego si desea salir return jugando = false
+        
     }
 
     return;
