@@ -67,6 +67,10 @@ export abstract class Tragamonedas implements Juego {
     this.saldoDisponible = 0;
     return saldoRetirar;
   }
+  //setSaldoDisponible
+  public setSaldoDisponible(saldo: number): void {
+    this.saldoDisponible = saldo;
+  }
 
   //agregue setSaldoInicial, metodo interno que se usa en jugar() para empezar que seria igual para todos
   protected setSaldoInicial(jugador: Jugador): void {
@@ -82,6 +86,11 @@ export abstract class Tragamonedas implements Juego {
     }
 
     this.ingresarSaldoInicial(saldoInicial); // se ingresa el saldo inicial al juego
+  }
+
+  obtenerSimbolosAleatorios(): string {
+    const index = Math.floor(Math.random() * this.simbolos.length);
+    return this.simbolos[index];
   }
 
   abstract jugar(jugador: Jugador): void;
