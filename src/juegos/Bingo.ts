@@ -1,3 +1,5 @@
+//se le puede poner un array de jugadores y opciones para jugar en grupo
+
 
 /*
 Props:

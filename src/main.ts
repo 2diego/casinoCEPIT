@@ -1,30 +1,53 @@
+import { GameFactory } from "./factories/GameFactory";
 import { Casino } from "./models/Casino";
 import { Jugador } from "./models/Jugador";
-//import { GameFactory } from "./factories/GameFactory";
+import { crearJugador } from "./utils/utils";
 import * as readline from "readline-sync";
 
 function main(){
-  const casino = new Casino();
-  const nombreJugador: string = readline.question("Ingrese su nombre: ");
-  let montoJugador: number = readline.questionInt("Ingrese monto inicial: ");
+  const casino = Casino.getInstance();
   
-  while (montoJugador <= 0) {
-    console.log("El monto inicial debe ser mayor a 0.");
-    montoJugador = readline.questionInt("Ingrese monto inicial: ");
+  const tragamonedas = GameFactory.crearJuego({
+    tipo: "tragamonedas-clasico",
+    nombre: "Tragamonedas de Iconos",
+    simbolos: ["🍒", "🍋", "🔔", "💎", "🦊", "🍀", "🍇", "🕊️", "🐸" ],
+    apuestaMin: 10,
+    apuestaMax: 100,
+  });
+  if (tragamonedas) {
+    casino.ingresarJuego(tragamonedas);
   }
-  const jugador = new Jugador(nombreJugador, montoJugador);
   
-  // casino.ingresarJuego(new Tragamonedas());
-  // casino.ingresarJuego(new Blackjack());
-  // casino.ingresarJuego(new Bingo());
+  console.log(`Bienvenido al Casino CEPIT`);
+
+  let eligiendoJugadores: boolean = true;
+  while (eligiendoJugadores) {
+    const cantidadJugadores: number = readline.questionInt(
+      "Ingrese la cantidad de jugadores que van a jugar o 0 para salir: "
+  );
+
+  if (cantidadJugadores == 0) {
+    console.log("Gracias por jugar. ¡Hasta luego!");
+    return eligiendoJugadores = false;
+  } else if (cantidadJugadores < 0) {
+    console.log("La cantidad de jugadores debe ser mayor a 0.");
+    continue;
+  } else {
+    for (let i = 0; i < cantidadJugadores; i++) {
+      const jugador: Jugador = crearJugador();
+      casino.ingresarJugador(jugador);
+    }
+    eligiendoJugadores = false;
+  }
+
+}
 
   let enCasino = true;
-
-  console.log(`Bienvenido ${jugador.getNombre()} al Casino CEPIT`);
-  while(enCasino){//acomode el loop de main
+  
+  while(enCasino){
     const eleccion: string = readline.question(`\nElija una opcion:
     1 - Ver juegos
-    2 - Ver saldo
+    2 - Ver saldos
     3 - Salir`)
 
     switch (eleccion) {
@@ -36,23 +59,20 @@ function main(){
           enCasino = false;
           continue;
         }
-        casino.elegirJuego(jugador, juegoSeleccionado);
+        casino.elegirJuego(casino.getJugadores(), juegoSeleccionado);
         break;
       case '2':
-        console.log(`Tu saldo es de $${jugador.getMonto()}`);
+        console.log(`Saldo de los jugadores: `);
+        console.table(casino.getJugadores())
+        ;
         break;
       case '3':
-        console.log(`Hasta luego ${jugador.getNombre()}`);
+        console.log(`Hasta luego!`);
         enCasino = false;
         break;
       default:
         console.log("Opcion invalida");
         break;
-    }
-
-    if (jugador.getMonto() <= 0) {
-      console.log("Te quedaste sin saldo. Gracias por jugar.");
-      enCasino = false;
     }
   }
 }

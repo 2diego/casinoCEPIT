@@ -84,10 +84,10 @@ class Blackjack implements Juego {
         return true;
         }
         
-    jugar(jugador: Jugador): void {
+    jugar(jugador: Jugador[]): void {
         console.log(`\n---------- Bienvenido a ${this.getNombre()} ----------`);
         
-        this.setSaldoInicial(jugador);
+        this.setSaldoInicial(jugador[0]);//ver que jugador va a jugar
         if (this.getSaldoDisponible() === 0) { // Si no se pudo establecer el saldo inicial, retornamos y no se juega
             return;
         }

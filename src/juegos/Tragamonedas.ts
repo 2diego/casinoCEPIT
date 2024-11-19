@@ -5,17 +5,15 @@ import { validarSaldoInicial } from "../utils/utils";
 export abstract class Tragamonedas implements Juego {
   private nombre: string;
   private simbolos: string[];
-  //Agregue apuesta min y max
   private apuestaMin: number;
   private apuestaMax: number;
   private saldoDisponible: number;
+  private filas: number;
 
-  constructor(nombre: string, simbolos: string[] = [], apuestaMinima: number = 0, apuestaMaxima: number = 0) {
+  constructor(nombre: string, simbolos: string[] = [], apuestaMinima: number = 0, apuestaMaxima: number = 0, filas: number = 3) {
     this.nombre = nombre;
-    //Agregue para pasar simbolos en el constructor
     this.simbolos = simbolos;
     this.saldoDisponible = 0;
-    //Agregue validacion para apuesta min y max
     if (apuestaMinima < 0 || apuestaMaxima < 0) {
       throw new Error("Las apuestas minima y maxima no pueden ser negativas.");
     }
@@ -24,35 +22,32 @@ export abstract class Tragamonedas implements Juego {
     }
     this.apuestaMin = apuestaMinima;
     this.apuestaMax = apuestaMaxima;
+    this.filas = filas;
   }
 
   public getNombre(): string {
     return this.nombre;
   }
 
-  //Saque de abstract verSaldoDisponible y lo hice public
   public getSaldoDisponible(): number {
     return this.saldoDisponible;
   }
 
   public getApuestaMin(): number {
     return this.apuestaMin;
-  }//agregue getApuestaMin
+  }
 
   public getApuestaMax(): number {
     return this.apuestaMax;
-  }//agregue getApuestaMax
+  }
 
   public getSimbolos(): string[] {
     return this.simbolos;
-  }//agregue getSimbolos
+  }
 
-  public ingresarSaldoInicial(saldoInicial: number): void {
-    if (saldoInicial < this.getApuestaMin()) {
-      throw new Error("El saldo ingresado no puede ser menor que la apuesta minima.");
-    }
-    this.ingresarSaldo(saldoInicial);
-  }//agregue ingresarSaldo
+  public getFilas(): number {
+    return this.filas;
+  }
 
   public ingresarSaldo(saldo: number): void {
     if (saldo < 0) {
@@ -61,31 +56,29 @@ export abstract class Tragamonedas implements Juego {
     this.saldoDisponible += saldo;
   }
 
-  //Hice retirarSaldo public
   public retirarSaldo(): number {
     const saldoRetirar = this.saldoDisponible;
     this.saldoDisponible = 0;
     return saldoRetirar;
   }
-  //setSaldoDisponible
+
   public setSaldoDisponible(saldo: number): void {
     this.saldoDisponible = saldo;
   }
 
-  //agregue setSaldoInicial, metodo interno que se usa en jugar() para empezar que seria igual para todos
   protected setSaldoInicial(jugador: Jugador): void {
-    let saldoInicial: number = validarSaldoInicial(this.getApuestaMin()); //se pide saldo inicial
+    let saldoInicial: number = validarSaldoInicial(this.getApuestaMin());
     if (saldoInicial === 0) {
       return;
     }
     
-    let cargar: boolean = jugador.cargarJuego(saldoInicial); //se valida que el jugador tenga el monto
+    let cargar: boolean = jugador.cargarJuego(saldoInicial);
     if (!cargar) {
       console.log(`\nNo cuenta con saldo suficiente para jugar ${this.getNombre()}.`);
       return;
     }
 
-    this.ingresarSaldoInicial(saldoInicial); // se ingresa el saldo inicial al juego
+    this.ingresarSaldo(saldoInicial);
   }
 
   obtenerSimbolosAleatorios(): string {
@@ -93,10 +86,55 @@ export abstract class Tragamonedas implements Juego {
     return this.simbolos[index];
   }
 
-  abstract jugar(jugador: Jugador): void;
+  public girar(filas: number): string[][] {
+    let resultado: string[][] = [];
+
+    for (let i = 0; i < filas; i++) {
+      let filaSimbolos: string[] = [];
+      for (let j = 0; j < 3; j++) {
+        const simbolo = this.getSimbolos()[Math.floor(Math.random() * this.simbolos.length)];
+        filaSimbolos.push(simbolo);
+      }
+      resultado.push(filaSimbolos);
+    }
+
+    return resultado;
+  }
+
+  public mostrarResultado(resultado: string[][]): void {
+    for (let i = 0; i < this.getFilas() ; i++) {
+      console.log(`${resultado[i][0]} | ${resultado[i][1]} | ${resultado[i][2]}`);
+    }
+  }
+
+  public validarApuesta(monto: number): boolean {
+    if (monto <= 0) {
+      console.log("La apuesta debe ser mayor a 0.");
+      return false;
+    }
+    if (this.getSaldoDisponible() < monto) {
+      console.log("No cuenta con saldo suficiente para apostar.");
+      return false;
+    }
+    if (this.getApuestaMin() > 0 && monto < this.getApuestaMin()) {
+      console.log("La apuesta debe ser mayor a la apuesta minima.");
+      return false;
+    }
+    if (this.getApuestaMax() > 0 && monto > this.getApuestaMax()) {
+      console.log("La apuesta debe ser menor a la apuesta maxima.");
+      return false;
+    }
+    return true
+  }
+
+  abstract jugar(jugador: Jugador[]): void;
   
   //Metodos privados que cambian dependiendo de la logica del juego y se usan en jugar()
   protected abstract apostar(monto:number): void;
-  
+  /*validarApuesta publica?
+  en apostar se elijen detalles de la apuesta, se calcula monto final, if (validarApuesta(monto)) { 
+  setSaldoDisponible, girar, mostrarResultado, calcularPremio, ingresarSaldo }
+  */
+ 
   protected abstract calcularPremio(): void;
 }
