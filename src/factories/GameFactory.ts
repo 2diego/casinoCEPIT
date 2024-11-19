@@ -1,15 +1,32 @@
-// import { Tragamonedas } from "../juegos/Tragamonedas";
-// import { Juego } from "../models/Juego";
+import { TragamonedasClasico } from "../juegos/TragamonedasClasico";
+import { Juego } from "../models/Juego";
 
-// export class GameFactory {
-//   public static crearJuego(juego: string): void {
-//     switch (juego) {
-//       case "tragamonedas-clasico":
-//         const tragamonedasCaras: Juego = new TragamonedasClasico();
-//         break;
-//       default:
-//         console.log("Juego no encontrado");
-//         break;
-//     }
-//   }
-// }
+interface DetallesTragamonedasClasico  {
+  tipo: "tragamonedas-clasico",
+  nombre: string,
+  simbolos: string[],
+  apuestaMin: number,
+  apuestaMax: number
+}
+
+/*interface DetallesBlackjack {
+  tipo: "blackjack",
+  name: string,
+  apuestaMin: number,
+  apuestaMax: number
+}
+*/
+type DetallesJuego = DetallesTragamonedasClasico; // | DetallesBlackjack
+
+export class GameFactory {
+  public static crearJuego(detalles: DetallesJuego): Juego | null {
+    switch (detalles.tipo) {
+      case "tragamonedas-clasico":
+        return new TragamonedasClasico(detalles.nombre, detalles.simbolos, detalles.apuestaMin, detalles.apuestaMax);
+      //case 2..
+        default:
+        console.log("Juego no encontrado");
+        return null;
+    }
+  }
+}

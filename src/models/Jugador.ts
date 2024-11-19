@@ -1,6 +1,6 @@
 export class Jugador {
   private nombre: string;
-  private monto: number;
+  private monto: number;//fondosDisponibles
 
   constructor(nombre: string, monto: number) {
     this.nombre = nombre;
@@ -13,17 +13,14 @@ export class Jugador {
   public getMonto(): number {
     return this.monto;
   }
+  
+  //setFondosDisponibles si queremos agregar una opcion para ingresar fondos a la app
 
   public sumarGanancia(saldo: number): void {
-    //agregue validacion
-    if (saldo < 0) {
-      throw new Error("El saldo a sumar no puede ser negativo.");
-    }
     this.monto += saldo;
   }
 
-  //cargarJuego ahora devuelve boolean para verificar en el juego si se cargo o no
-  public cargarJuego(saldo: number): boolean {
+  public cargarJuego(saldo: number): boolean {//comprarFichas
     if (saldo > this.monto) {
       console.log("Saldo insuficiente");
       return false;
