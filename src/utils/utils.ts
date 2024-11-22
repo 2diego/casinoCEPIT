@@ -14,3 +14,16 @@ export function validarSaldoInicial(apuestaMin: number): number {
     }
     return saldoInicial;
 }
+
+export function elegirJugador(jugadores: Jugador[]): Jugador {
+  console.log(`\nElija un jugador para sentarse: `);
+      for (let i = 0; i < jugadores.length; i++) {
+        console.log(`${i + 1} - ${jugadores[i].getNombre()}`);
+      }
+      const indexJugador: number = readline.questionInt("Ingrese el numero del jugador: ") - 1;
+      if (indexJugador < 0 || indexJugador >= jugadores.length) {
+        console.log("Opcion invalida. Intente nuevamente.");
+        return elegirJugador(jugadores);
+      }
+      return jugadores[indexJugador];
+}

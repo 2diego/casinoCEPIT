@@ -5,14 +5,21 @@ import { validarSaldoInicial } from "../utils/utils";
 class Blackjack implements Juego {
     private nombre: string;
     private saldoDisponible: number;
-    private cartas: string[];
+    private mazo: string[];
+    private jugadores: Jugador[];
     private apuestaMin: number;
     private apuestaMax: number;
 
-    constructor(cartas: string[],apuestaMin: number = 0, apuestaMax: number = 0) {
+    constructor(apuestaMin: number = 0, apuestaMax: number = 0) {
         this.nombre = "Blackjack";
         this.saldoDisponible = 0;
-        this.cartas = cartas;
+        this.mazo = [
+            "2♠", "3♠", "4♠", "5♠", "6♠", "7♠", "8♠", "9♠", "10♠", "J♠", "Q♠", "K♠", "A♠",
+            "2♥", "3♥", "4♥", "5♥", "6♥", "7♥", "8♥", "9♥", "10♥", "J♥", "Q♥", "K♥", "A♥",
+            "2♦", "3♦", "4♦", "5♦", "6♦", "7♦", "8♦", "9♦", "10♦", "J♦", "Q♦", "K♦", "A♦",
+            "2♣", "3♣", "4♣", "5♣", "6♣", "7♣", "8♣", "9♣", "10♣", "J♣", "Q♣", "K♣", "A♣"
+          ];
+        this.jugadores = [];
         if (apuestaMin < 0 || apuestaMax < 0) {
             throw new Error("Las apuestas minima y maxima no pueden ser negativas.");
           }
@@ -39,8 +46,12 @@ class Blackjack implements Juego {
         return this.apuestaMax;
     }
 
-    getCartas(): string[] {
-        return this.cartas;
+    getJugadores(): Jugador[] {
+        return this.jugadores;
+    }
+
+    getMazo(): string[] {
+        return this.mazo;
     }
 
     ingresarSaldo(saldo: number): void {
@@ -93,9 +104,18 @@ class Blackjack implements Juego {
         }
         let jugando = true;
         while (jugando) {
+            function mezclarMazo(mazo: string[]): string[] {
+                for (let i = mazo.length - 1; i > 0; i--) {
+                  const j = Math.floor(Math.random() * (i + 1));
+                  [mazo[i], mazo[j]] = [mazo[j], mazo[i]];
+                }
+                return mazo;
+              }
+              
+            mezclarMazo(this.mazo);
             
-        }
-        
+            }                     
         return;
+        }  
     }
-}
+
