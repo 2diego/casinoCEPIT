@@ -31,15 +31,15 @@ export class Casino{
   
 
   public verJuegos(){
-    console.log('Elija un juego: ')
+    console.log('\nElija un juego: ')
     this.juegos.forEach((juego, index) => {
-      console.log(`${index + 1} - ${juego.getNombre()}`);
+      console.log(`\n${index + 1} - ${juego.getNombre()}`);
     });
   }
 
   public elegirJuego(jugadores: Jugador[], index: number): void{
     if (index < 1 || index > this.juegos.length) {
-      console.error("Opción inválida. Intente nuevamente.");
+      console.error("\nOpción inválida. Intente nuevamente.");
       return;
     }
     const juego: Juego = this.juegos[index - 1];

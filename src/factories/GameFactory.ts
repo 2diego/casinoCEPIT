@@ -25,7 +25,7 @@ export class GameFactory {
         return new TragamonedasClasico(detalles.nombre, detalles.simbolos, detalles.apuestaMin, detalles.apuestaMax);
       //case 2..
         default:
-        console.log("Juego no encontrado");
+        console.log("\nJuego no encontrado");
         return null;
     }
   }
