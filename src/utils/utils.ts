@@ -1,5 +1,6 @@
 import { Jugador } from '../models/Jugador';
 import * as readline from 'readline-sync';
+import { Juego } from '../models/Juego';
 
 //Utils juegos
 export function validarSaldoInicial(apuestaMin: number): number {
@@ -40,4 +41,26 @@ export function crearJugador(): Jugador {
   }
   
   return new Jugador(nombreJugador, montoJugador);
+}
+
+export function solicitarSaldo(juego: Juego, jugador: Jugador): void {
+  let nuevoSaldo: number = readline.questionInt(`\nNo tiene saldo suficiente para continuar jugando. Saldo actual: $${juego.getSaldoDisponible()}.
+  \nIngrese saldo a depositar o 0 para retirar fondos y salir: `);
+  if (nuevoSaldo === 0) {
+    console.log(`\nGracias por jugar ${juego.getNombre()}. Saliendo al menu principal..`);
+    return;
+  } else if (nuevoSaldo < 0) {
+      console.log('\nEl saldo debe ser mayor a 0.');
+      solicitarSaldo(juego, jugador);
+    } else {
+        if (jugador.cargarJuego(nuevoSaldo)) {
+          juego.ingresarSaldo(nuevoSaldo);
+          console.log(`\nSe ingreso $${nuevoSaldo} al juego.
+          \nSaldo actual: $${juego.getSaldoDisponible()}`);
+          return;
+        } else {
+          console.log(`\nNo cuenta con saldo suficiente para jugar ${juego.getNombre()}. Saliendo al menu principal..`);
+          return;
+        }
+      }
 }

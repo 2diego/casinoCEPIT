@@ -6,16 +6,16 @@ export abstract class Tragamonedas implements Juego {
   private nombre: string;
   private simbolos: string[];
   //agregue simbolos otro para que se guarden los simbolos que se crean al girar
-  private simbolosGenerados: string[] = [];
+  // private simbolosGenerados: string[] = [];
   private apuestaMin: number;
   private apuestaMax: number;
   private saldoDisponible: number;
-  private filas: number;
+  protected filas: number;
    //agregue apuestaActual 
   private apuestaActual: number = 0;
  
 
-  constructor(nombre: string, simbolos: string[] = [], apuestaMinima: number = 0, apuestaMaxima: number = 0, filas: number = 3) {
+  constructor(nombre: string, simbolos: string[] = [], apuestaMinima: number = 0, apuestaMaxima: number = 0) {
     this.nombre = nombre;
     this.simbolos = simbolos;
     this.saldoDisponible = 0;
@@ -27,7 +27,7 @@ export abstract class Tragamonedas implements Juego {
     }
     this.apuestaMin = apuestaMinima;
     this.apuestaMax = apuestaMaxima;
-    this.filas = filas;
+    this.filas = 3;
   }
 
   public getNombre(): string {
@@ -50,9 +50,9 @@ export abstract class Tragamonedas implements Juego {
     return this.simbolos;
   }
   //agregue getsimbolosGenerados
-  getSimbolosGenerados(): string[] {
-    return this.simbolosGenerados;
-  }
+  // getSimbolosGenerados(): string[] {
+  //   return this.simbolosGenerados;
+  // }
   
   public getFilas(): number {
     return this.filas;
@@ -62,25 +62,14 @@ export abstract class Tragamonedas implements Juego {
     return this.apuestaActual;
   }
 
-  public ingresarSaldo(saldo: number): void {
+  public ingresarSaldo(saldo: number): void {//mejorar validacion
     if (saldo < 0) {
       throw new Error("\nEl saldo ingresado no puede ser negativo.");
     }
     this.saldoDisponible += saldo;
   }
 
-  // public retirarSaldo(): number {
-  //   const saldoRetirar = this.getSaldoDisponible();
-  //   if(saldoRetirar > 0){
-  //     this.setSaldoDisponible(0);
-  //     console.log(`\nHas retirado: $${saldoRetirar}`);
 
-      
-  //   }else{
-  //     console.log("\n no hay saldo disponible para retirar.");
-  //   }
-  //   return saldoRetirar;  //revisar el retirarsaldo dice que retirar pero no lo suma al jugador
-  // }
   
   //agregue cuanto retira el jugador e hice que se le sume al monto del jugador
   public retirarSaldo(jugador: Jugador): number {
@@ -119,10 +108,10 @@ export abstract class Tragamonedas implements Juego {
     return this.simbolos[index];
   }
 
-  public girar(filas: number): string[][] {
+  public girar(): string[][] {
     let resultado: string[][] = [];
 
-    for (let i = 0; i < filas; i++) {
+    for (let i = 0; i < this.getFilas(); i++) {
       let filaSimbolos: string[] = [];
       for (let j = 0; j < 3; j++) {
         const simbolo = this.obtenerSimbolosAleatorios();
@@ -130,26 +119,15 @@ export abstract class Tragamonedas implements Juego {
       }
       resultado.push(filaSimbolos);
     }
-    this.simbolosGenerados = resultado[0];
     return resultado;
   }
 
-  public mostrarResultado(resultado: any[][]): void {
-    for (let i = 0; i < resultado.length; i++) {
-      if (resultado[i] && resultado[i][0] !== undefined && resultado[i][1] !== undefined && resultado[i][2] !== undefined) {
-        console.log(`${resultado[i][0]} | ${resultado[i][1]} | ${resultado[i][2]}`);
-      } else {
-        console.error(`\nError: resultado[${i}] está undefined o no tiene suficientes elementos.`);
-      }
+  
+  public mostrarResultado(resultado: string[][]): void {
+    for (let i = 0; i < this.getFilas() ; i++) {
+      console.log(`${resultado[i][0]} | ${resultado[i][1]} | ${resultado[i][2]}`);
     }
   }
-  // cambie el mostrarResultado de abajo por el de arriba 
-  
-  // public mostrarResultado(resultado: string[][]): void {
-  //   for (let i = 0; i < this.getFilas() ; i++) {
-  //     console.log(`${resultado[i][0]} | ${resultado[i][1]} | ${resultado[i][2]}`);
-  //   }
-  // }
 
   public validarApuesta(monto: number): boolean {
     if (monto <= 0) {
@@ -180,5 +158,5 @@ export abstract class Tragamonedas implements Juego {
   setSaldoDisponible, girar, mostrarResultado, calcularPremio, ingresarSaldo }
   */
 
-  protected abstract calcularPremio(): void;
+  protected abstract calcularPremio(resultado: string[][],apuesta: number): void;
 }
