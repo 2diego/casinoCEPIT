@@ -86,11 +86,8 @@ export class TragamonedasClasico extends Tragamonedas {
         case 1:
           this.apostar();
           break;
-        case 2:
-          this.agregarSaldo(jugador[0]);
-          break;
-        case 3:
-          this.verInstrucciones();
+        case "3":
+          this.agregarSaldo(jugador[0]);//ver si queda bien
           break;
         case 4:
           this.retirarSaldo(jugador[0]);
@@ -100,16 +97,9 @@ export class TragamonedasClasico extends Tragamonedas {
         default:
           console.log("\nOpcion no valida.");
           break;
+        }
+        // solicitarSaldo(this, jugador[0]);
       }
-
-      if (this.getSaldoDisponible() < this.getApuestaMin()) {
-        if(!solicitarRecarga(this, jugador[0])){
-          this.retirarSaldo(jugador[0]);
-          jugando = false;
-        };
-
-      } //arreglar esto
-    }
 
     return;
   }
