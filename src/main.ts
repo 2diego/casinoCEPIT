@@ -2,6 +2,8 @@ import { GameFactory } from "./factories/GameFactory";
 import { Casino } from "./models/Casino";
 import { Jugador } from "./models/Jugador";
 import { crearJugador } from "./utils/utils";
+import { BonusGirosGratis } from "./bonus/BonusGirosGratis";
+import { TragamonedasBonus } from "./juegos/TragamonedasBonus";
 import * as readline from "readline-sync";
 
 function main(){
@@ -9,14 +11,28 @@ function main(){
   
   const tragamonedas = GameFactory.crearJuego({
     tipo: "tragamonedas-clasico",
-    nombre: "Tragamonedas de Iconos",
-    simbolos: ["🍒", "🍋","7️⃣"],
+    nombre: "Tragamonedas clasico",
+    simbolos: ["🍒", "🍋","7️⃣", "💎", "🍇"],
     apuestaMin: 10,
     apuestaMax: 100,
   });
   if (tragamonedas) {
     casino.ingresarJuego(tragamonedas);
   }
+
+  const tragamonedasBonus  = GameFactory.crearJuego({
+    tipo: "tragamonedas-bonus",
+    nombre: "Tragamonedas de Iconos con Bonus",
+    simbolos: ["🍒", "🍋", "🔥"],
+    apuestaMin: 0,
+    apuestaMax: 0,
+  });
+  if (tragamonedasBonus instanceof TragamonedasBonus) {
+    tragamonedasBonus.agregarBonus(new BonusGirosGratis("🔥", 3));
+    tragamonedasBonus.agregarBonus(new BonusGirosGratis("🍒", 1));
+    casino.ingresarJuego(tragamonedasBonus);
+  }
+
   
   console.log(`\n---------- Bienvenido al Casino CEPIT ----------`);
 
