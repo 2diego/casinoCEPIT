@@ -1,7 +1,7 @@
 import { Jugador } from "../models/Jugador";
 import { Juego } from "../models/Juego";
 import { validarSaldoInicial } from "../utils/utils";
-
+import * as readline from "readline-sync";
 export abstract class Tragamonedas implements Juego {
   private nombre: string;
   private simbolos: string[];
@@ -64,11 +64,19 @@ export abstract class Tragamonedas implements Juego {
 
   public ingresarSaldo(saldo: number): void {//mejorar validacion
     if (saldo < 0) {
-      throw new Error("\nEl saldo ingresado no puede ser negativo.");
+      console.error("\nEl saldo ingresado no puede ser negativo.");
     }
     this.saldoDisponible += saldo;
   }
-
+  //nuevo metodo agregado en el menu de tragamonedas para agregar saldo
+  public agregarSaldo(jugador: Jugador): number {
+    const saldo :number = readline.questionInt("\nIngrese el saldo a agregar: ");
+    if (jugador.cargarJuego(saldo)) {
+      this.ingresarSaldo(saldo);
+      console.log(`\nSe ingreso $${saldo} al juego.`);
+    }
+    return saldo;
+  }
 
   
   //agregue cuanto retira el jugador e hice que se le sume al monto del jugador

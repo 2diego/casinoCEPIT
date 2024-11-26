@@ -94,7 +94,7 @@ export class TragamonedasClasico extends Tragamonedas {
           this.apostar();
           break;
         case "3":
-          // this.ingresarSaldo();//hacer verificacion, esto esta mal
+          this.agregarSaldo(jugador[0]);//ver si queda bien
           break;
         case "4":
           this.retirarSaldo(jugador[0]);
@@ -103,9 +103,9 @@ export class TragamonedasClasico extends Tragamonedas {
         default:
           console.log("\nOpcion no valida.");
           break;
+        }
+        // solicitarSaldo(this, jugador[0]);
       }
-      solicitarSaldo(this, jugador[0]);
-    }
 
     return;
   }

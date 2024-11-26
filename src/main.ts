@@ -10,7 +10,7 @@ function main(){
   const tragamonedas = GameFactory.crearJuego({
     tipo: "tragamonedas-clasico",
     nombre: "Tragamonedas de Iconos",
-    simbolos: ["🍒", "🍋","7️⃣"],
+    simbolos: ["🍒", "🍋","7️⃣","💎","🍇"],
     apuestaMin: 10,
     apuestaMax: 100,
   });
