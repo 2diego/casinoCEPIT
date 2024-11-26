@@ -1,6 +1,7 @@
 import { Jugador } from "../models/Jugador";
 import { Juego } from "../models/Juego";
-import { validarSaldoInicial } from "../utils/utils";
+import { solicitarSaldo, validarSaldoInicial } from "../utils/utils";
+import fs from 'fs';
 
 export abstract class Tragamonedas implements Juego {
   private nombre: string;
@@ -11,6 +12,7 @@ export abstract class Tragamonedas implements Juego {
   private apuestaMax: number;
   private saldoDisponible: number;
   protected filas: number;
+  protected columnas: number;
    //agregue apuestaActual 
   private apuestaActual: number = 0;
  
@@ -27,6 +29,8 @@ export abstract class Tragamonedas implements Juego {
     }
     this.apuestaMin = apuestaMinima;
     this.apuestaMax = apuestaMaxima;
+    this.filas = 3;
+    this.columnas = 3;
     this.filas = 3;
   }
 
@@ -57,16 +61,36 @@ export abstract class Tragamonedas implements Juego {
   public getFilas(): number {
     return this.filas;
   }
+
+  public getColumnas(): number {
+    return this.columnas;
+  }
   //Agregue getApuestaActual
   getApuestaActual(): number {
     return this.apuestaActual;
   }
 
+  public verInstrucciones(): void {
+    console.log(`\n---------- Instrucciones de Tragamonedas Clasico ----------`);
+    let name: string = this.getNombre().toLowerCase().replace(" ", "-");
+    const datos = fs.readFileSync(`../src/instrucciones/${name}.txt`, 'utf-8');
+    console.log(datos);
+  }
+
   public ingresarSaldo(saldo: number): void {//mejorar validacion
     if (saldo < 0) {
-      throw new Error("\nEl saldo ingresado no puede ser negativo.");
+      console.error("\nEl saldo ingresado no puede ser negativo.");
     }
     this.saldoDisponible += saldo;
+  }
+  //nuevo metodo agregado en el menu de tragamonedas para agregar saldo
+  public agregarSaldo(jugador: Jugador): number {
+    const saldo: number = solicitarSaldo();
+    if (jugador.cargarJuego(saldo)) {
+      this.ingresarSaldo(saldo);
+      console.log(`\nSe ingreso $${saldo} al juego.`);
+    }
+    return saldo;
   }
 
 
@@ -105,7 +129,7 @@ export abstract class Tragamonedas implements Juego {
 
   obtenerSimbolosAleatorios(): string {
     const index = Math.floor(Math.random() * this.simbolos.length);
-    return this.simbolos[index];
+    return this.getSimbolos()[index];
   }
 
   public girar(): string[][] {
@@ -113,7 +137,7 @@ export abstract class Tragamonedas implements Juego {
 
     for (let i = 0; i < this.getFilas(); i++) {
       let filaSimbolos: string[] = [];
-      for (let j = 0; j < 3; j++) {
+      for (let j = 0; j < this.getColumnas(); j++) {
         const simbolo = this.obtenerSimbolosAleatorios();
         filaSimbolos.push(simbolo);
       }
@@ -152,11 +176,11 @@ export abstract class Tragamonedas implements Juego {
   abstract jugar(jugador: Jugador[]): void;
 
   //Metodos privados que cambian dependiendo de la logica del juego y se usan en jugar()
-  protected abstract apostar(monto: number): void;
+  public abstract apostar(monto:number, lineasApostadas: number, inBonus: boolean): void;
   /*validarApuesta publica?
   en apostar se elijen detalles de la apuesta, se calcula monto final, if (validarApuesta(monto)) { 
   setSaldoDisponible, girar, mostrarResultado, calcularPremio, ingresarSaldo }
   */
-
-  protected abstract calcularPremio(resultado: string[][],apuesta: number): void;
+ 
+  protected abstract calcularPremio(resultado: string[][], apuesta:number, lineasApostadas: number): void;
 }

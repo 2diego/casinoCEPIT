@@ -1,6 +1,6 @@
 import { Jugador } from '../models/Jugador';
-import * as readline from 'readline-sync';
 import { Juego } from '../models/Juego';
+import * as readline from 'readline-sync';
 
 //Utils juegos
 export function validarSaldoInicial(apuestaMin: number): number {
@@ -17,7 +17,7 @@ export function validarSaldoInicial(apuestaMin: number): number {
     }
     return saldoInicial;
 }
-//Utils main
+
 export function elegirJugador(jugadores: Jugador[]): Jugador {
   console.log(`\nElija un jugador para sentarse: `);
       for (let i = 0; i < jugadores.length; i++) {
@@ -25,12 +25,98 @@ export function elegirJugador(jugadores: Jugador[]): Jugador {
       }
       const indexJugador: number = readline.questionInt("Ingrese el numero del jugador: ") - 1;
       if (indexJugador < 0 || indexJugador >= jugadores.length) {
-        console.log("\nOpcion invalida. Intente nuevamente.");
+        console.log("Opcion invalida. Intente nuevamente.");
         return elegirJugador(jugadores);
       }
       return jugadores[indexJugador];
 }
 
+
+export function solicitarRecarga(juego: Juego, jugador: Jugador): boolean {
+  let nuevoSaldo: number = readline.questionInt(`\nNo tiene saldo suficiente para continuar jugando. Saldo actual: $${juego.getSaldoDisponible()}.
+Ingrese saldo a depositar o 0 para retirar fondos y salir: `);
+  
+  if (nuevoSaldo === 0) {
+    console.log(`\nGracias por jugar ${juego.getNombre()}. Saliendo al menu principal..`);
+    return false;
+  } else if (nuevoSaldo < 0) {
+      console.log('El saldo debe ser mayor a 0.');
+      solicitarRecarga(juego, jugador);
+    } else {
+        if (jugador.cargarJuego(nuevoSaldo)) {
+          juego.ingresarSaldo(nuevoSaldo);
+          console.log(`\nSe ingreso $${nuevoSaldo} al juego.
+Saldo actual: $${juego.getSaldoDisponible()}`);
+          return true;
+        }
+      }
+      return false;
+}
+
+export function menuTragamonedas(): number {
+  let accion: number = 0
+  
+  while (accion < 1 || accion > 4) {
+    accion = readline.questionInt(`\nElija una opcion:
+      1 - Apostar
+      2 - Ingresar saldo
+      3 - Ver instrucciones
+      4 - Retirar saldo y salir
+      
+Su eleccion: `);
+    
+    if (accion < 1 || accion > 4) {
+      console.log('Opcion invalida. Intente nuevamente.');
+    }
+  }
+
+  return accion;
+}
+
+export function solicitarApuesta(): number {
+  let apuesta: number = readline.questionInt('\nIngrese el monto que desea apostar por linea: ');
+
+  return apuesta;
+}
+
+export function solicitarLineas(): number {
+  let lineas: number = 0
+
+  while (lineas < 1 || lineas > 5 || lineas === 4 ) {
+    lineas = readline.questionInt(`Ingrese el numero de lineas que desea apostar:
+      1 - Linea central
+      2 - Lineas externas
+      3 - Todas las lineas
+      5 - Lineas y diagonales
+  
+Su eleccion: `);
+    
+    if (lineas < 1 || lineas > 5 || lineas === 4) {
+      console.log('Opcion invalida. Intente nuevamente.');
+    }
+  }
+
+  return lineas;
+}
+
+export function confirmarApuesta(apuesta: number, lineasApostadas: number): boolean {
+  let confirmar: string = readline.question(`\nEsta apostando ${lineasApostadas} lineas a $${apuesta} por linea.
+Total apuesta: $${apuesta * lineasApostadas}.
+Confirmar apuesta (s/n): `);
+  
+    if (confirmar.toLowerCase() === 's') {
+      return true;
+    } else {
+        return false;
+    }
+}
+
+export function solicitarSaldo(): number {
+  const saldo :number = readline.questionInt("\nIngrese el saldo a agregar: ");
+  return saldo;
+}
+
+//Utils main
 
 export function crearJugador(): Jugador {
   const nombreJugador: string = readline.question('\nIngrese su nombre: ');
@@ -41,26 +127,4 @@ export function crearJugador(): Jugador {
   }
   
   return new Jugador(nombreJugador, montoJugador);
-}
-
-export function solicitarSaldo(juego: Juego, jugador: Jugador): void {
-  let nuevoSaldo: number = readline.questionInt(`\nNo tiene saldo suficiente para continuar jugando. Saldo actual: $${juego.getSaldoDisponible()}.
-  \nIngrese saldo a depositar o 0 para retirar fondos y salir: `);
-  if (nuevoSaldo === 0) {
-    console.log(`\nGracias por jugar ${juego.getNombre()}. Saliendo al menu principal..`);
-    return;
-  } else if (nuevoSaldo < 0) {
-      console.log('\nEl saldo debe ser mayor a 0.');
-      solicitarSaldo(juego, jugador);
-    } else {
-        if (jugador.cargarJuego(nuevoSaldo)) {
-          juego.ingresarSaldo(nuevoSaldo);
-          console.log(`\nSe ingreso $${nuevoSaldo} al juego.
-          \nSaldo actual: $${juego.getSaldoDisponible()}`);
-          return;
-        } else {
-          console.log(`\nNo cuenta con saldo suficiente para jugar ${juego.getNombre()}. Saliendo al menu principal..`);
-          return;
-        }
-      }
 }

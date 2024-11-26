@@ -22,7 +22,8 @@ export class Jugador {
 
   public cargarJuego(saldo: number): boolean {//comprarFichas
     if (saldo > this.monto) {
-      console.log("Saldo insuficiente");
+      console.log(`Saldo insuficiente para comprar ${saldo} fichas.
+      Saldo disponible: ${this.monto}`);
       return false;
     } else {
       this.monto -= saldo;
