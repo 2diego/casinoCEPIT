@@ -2,6 +2,7 @@ import { Jugador } from "../models/Jugador";
 import { Juego } from "../models/Juego";
 import { validarSaldoInicial } from "../utils/utils";
 import * as readline from "readline-sync";
+import fs from "fs";
 export abstract class Tragamonedas implements Juego {
   private nombre: string;
   private simbolos: string[];

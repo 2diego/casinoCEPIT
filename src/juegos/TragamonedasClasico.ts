@@ -86,7 +86,7 @@ export class TragamonedasClasico extends Tragamonedas {
         case 1:
           this.apostar();
           break;
-        case "3":
+        case 3:
           this.agregarSaldo(jugador[0]);//ver si queda bien
           break;
         case 4:
