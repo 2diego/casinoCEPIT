@@ -31,9 +31,9 @@ class Blackjack implements Juego {
         throw new Error("Method not implemented.");
     }
 
-    getNombre(): string {
-        return this.nombre;
-    }
+     getNombre(): string {
+         return this.nombre;
+     }
 
    getSaldoDisponible(): number {
          return this.saldoDisponible;

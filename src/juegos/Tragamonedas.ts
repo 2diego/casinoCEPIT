@@ -1,8 +1,8 @@
 import { Jugador } from "../models/Jugador";
 import { Juego } from "../models/Juego";
-import { solicitarSaldo, validarSaldoInicial } from "../utils/utils";
-import fs from 'fs';
-
+import { validarSaldoInicial } from "../utils/utils";
+import * as readline from "readline-sync";
+import fs from "fs";
 export abstract class Tragamonedas implements Juego {
   private nombre: string;
   private simbolos: string[];
@@ -85,14 +85,13 @@ export abstract class Tragamonedas implements Juego {
   }
   //nuevo metodo agregado en el menu de tragamonedas para agregar saldo
   public agregarSaldo(jugador: Jugador): number {
-    const saldo: number = solicitarSaldo();
+    const saldo :number = readline.questionInt("\nIngrese el saldo a agregar: ");
     if (jugador.cargarJuego(saldo)) {
       this.ingresarSaldo(saldo);
       console.log(`\nSe ingreso $${saldo} al juego.`);
     }
     return saldo;
   }
-
 
   
   //agregue cuanto retira el jugador e hice que se le sume al monto del jugador
