@@ -1,0 +1,25 @@
+Inicio del Juego:
+Saldo Inicial: Cada jugador comienza con un saldo inicial que puede usar para apostar.
+
+Apuesta:
+Montos de Apuesta: Selecciona el monto de la apuesta. Tienes 2 opciones, apuesta mínima o máxima.
+
+Girar:
+Iniciar el Giro: Presiona el botón de "Girar" para hacer girar los carretes.
+
+Resultado:
+Símbolos: Los carretes se detendrán y mostrarán una combinación de símbolos.
+
+Premios:
+
+Pago: Si obtuviste una combinación ganadora, recibirás un premio.
+
+Sin Ganancia: Si no obtuviste una combinación ganadora, no recibirás ningún premio.
+
+Continuar Jugando:
+Decisión: Decide si quieres continuar jugando con tu saldo restante o si deseas salir del juego.
+
+Ejemplo de Combinaciones Ganadoras
+Tres 7's: Premio Mayor
+
+Tres Cerezos: Premio Mediano
