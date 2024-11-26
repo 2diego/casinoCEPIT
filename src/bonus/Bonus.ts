@@ -1,4 +1,6 @@
+import { Tragamonedas } from "../juegos/Tragamonedas";
+
 export interface Bonus {
-  getNombre(): string;
-  activar(): number;
+  getIconoGanador(): string;
+  activar(juego: Tragamonedas, apuestas: number, lineasApostadas: number): void;
 }

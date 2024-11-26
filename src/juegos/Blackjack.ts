@@ -27,33 +27,36 @@ class Blackjack implements Juego {
         this.apuestaMin = apuestaMin;
         this.apuestaMax = apuestaMax;
     }
+    retirarSaldo(jugador: Jugador): void {
+        throw new Error("Method not implemented.");
+    }
 
     getNombre(): string {
         return this.nombre;
     }
 
-    getSaldoDisponible(): number {
-        return this.saldoDisponible;
-    }
+   getSaldoDisponible(): number {
+         return this.saldoDisponible;
+     }
 
-    getApuestaMin(): number {
+     getApuestaMin(): number {
         return this.apuestaMin;
-    }
+     }
 
-    getApuestaMax(): number {
-        return this.apuestaMax;
-    }
+     getApuestaMax(): number {
+         return this.apuestaMax;
+     }
 
     getJugadores(): Jugador[] {
         return this.jugadores;
     }
 
-    ingresarSaldo(saldo: number): void {
+     ingresarSaldo(saldo: number): void {
         if (saldo < 0) {
-            throw new Error("El saldo ingresado no puede ser negativo.");
-        }
+             throw new Error("El saldo ingresado no puede ser negativo.");
+         }
         this.saldoDisponible += saldo;
-    }
+     }
 
     ingresarSaldoInicial(saldoInicial: number): void {
         if (saldoInicial < this.getApuestaMin()) {
@@ -78,7 +81,7 @@ class Blackjack implements Juego {
     }
 
 
-    retirarSaldo(saldo: number): boolean {
+    /* retirarSaldo(jugador: Jugador): boolean {
         if (saldo < 0) {
             throw new Error("El saldo a retirar no puede ser negativo.");
         }
@@ -87,7 +90,7 @@ class Blackjack implements Juego {
         }
         this.saldoDisponible -= saldo;
         return true;
-    }
+    } */
 
     jugar(jugador: Jugador[]): void {
         console.log(`\n---------- Bienvenido a ${this.getNombre()} ----------`);
