@@ -1,5 +1,6 @@
 import { TragamonedasClasico } from "../juegos/TragamonedasClasico";
 import { Juego } from "../models/Juego";
+
 interface DetallesTragamonedasClasico  {
   tipo: "tragamonedas-clasico",
   nombre: string,
@@ -7,6 +8,7 @@ interface DetallesTragamonedasClasico  {
   apuestaMin: number,
   apuestaMax: number
 }
+
 /*interface DetallesBlackjack {
   tipo: "blackjack",
   name: string,
@@ -15,6 +17,7 @@ interface DetallesTragamonedasClasico  {
 }
 */
 type DetallesJuego = DetallesTragamonedasClasico; // | DetallesBlackjack
+
 export class GameFactory {
   public static crearJuego(detalles: DetallesJuego): Juego | null {
     switch (detalles.tipo) {
