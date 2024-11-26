@@ -86,21 +86,28 @@ export class TragamonedasClasico extends Tragamonedas {
         case 1:
           this.apostar();
           break;
-        case 3:
-          this.agregarSaldo(jugador[0]);//ver si queda bien
-          break;
-        case 4:
-          this.retirarSaldo(jugador[0]);
-          console.log("\nGracias por jugar.");
-          jugando = false;
-          return;
-        default:
-          console.log("\nOpcion no valida.");
-          break;
+          case 2:
+            this.agregarSaldo(jugador[0]);
+            break;
+          case 3:
+            this.verInstrucciones();//cargar archivo
+            break;
+          case 4:
+            console.log(`\nGracias por jugar ${this.getNombre()}.`);
+            this.retirarSaldo(jugador[0]);
+            jugando = false;
+            return;
+          default:
+            console.log("Opcion no valida.");
+            break;
         }
-        // solicitarSaldo(this, jugador[0]);
+        if (this.getSaldoDisponible() < this.getApuestaMin()) {
+          if(!solicitarRecarga(this, jugador[0])){
+            this.retirarSaldo(jugador[0]);
+            jugando = false;
+          }
+        };
       }
-
-    return;
-  }
+      return;
+    }
 }
