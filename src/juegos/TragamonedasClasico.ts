@@ -27,7 +27,7 @@ export class TragamonedasClasico extends Tragamonedas {
         `\nLa apuesta debe ser $${this.getApuestaMin()} o $${this.getApuestaMax()}.`
       );
     } else if (this.validarApuesta(apuesta)) {
-      console.log(`\nApostaste $${apuesta}.\n`);
+      console.log(`\nApostaste $${apuesta}.`);
       this.setSaldoDisponible(this.getSaldoDisponible() - apuesta);
       this.setApuestaActual(apuesta);
       const resultado: string[][] = this.girar();

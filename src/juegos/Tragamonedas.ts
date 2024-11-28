@@ -148,6 +148,7 @@ export abstract class Tragamonedas implements Juego {
 
   
   public mostrarResultado(resultado: string[][]): void {
+    console.log(`\n`)
     for (let i = 0; i < this.getFilas() ; i++) {
       console.log(`${resultado[i][0]} | ${resultado[i][1]} | ${resultado[i][2]}`);
     }
