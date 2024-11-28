@@ -22,4 +22,3 @@ Decisión: Decide si quieres continuar jugando con tu saldo restante o si deseas
 Ejemplo de Combinaciones Ganadoras
 Tres 7's: Premio Mayor
 
-Tres Cerezos: Premio Mediano

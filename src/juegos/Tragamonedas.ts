@@ -156,19 +156,19 @@ export abstract class Tragamonedas implements Juego {
 
   public validarApuesta(monto: number): boolean {
     if (monto <= 0) {
-      console.log("\nLa apuesta debe ser mayor a 0.");
+      console.error("\nLa apuesta debe ser mayor a 0.");
       return false;
     }
     if (this.getSaldoDisponible() < monto) {
-      console.log("\nNo cuenta con saldo suficiente para apostar.");
+      console.error("\nNo cuenta con saldo suficiente para apostar.");
       return false;
     }
     if (this.getApuestaMin() > 0 && monto < this.getApuestaMin()) {
-      console.log("\nLa apuesta debe ser mayor a la apuesta minima.");
+      console.error("\nLa apuesta debe ser mayor a la apuesta minima.");
       return false;
     }
     if (this.getApuestaMax() > 0 && monto > this.getApuestaMax()) {
-      console.log("\nLa apuesta debe ser menor a la apuesta maxima.");
+      console.error("\nLa apuesta debe ser menor a la apuesta maxima.");
       return false;
     }
     return true

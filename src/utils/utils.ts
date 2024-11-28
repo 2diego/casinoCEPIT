@@ -33,20 +33,20 @@ export function elegirJugador(jugadores: Jugador[]): Jugador {
 
 
 export function solicitarRecarga(juego: Juego, jugador: Jugador): boolean {
+  console.log(`\nEl monto del jugador es: ${jugador.getMonto()} `);
   let nuevoSaldo: number = readline.questionInt(`\nNo tiene saldo suficiente para continuar jugando. Saldo actual: $${juego.getSaldoDisponible()}.
-Ingrese saldo a depositar o 0 para retirar fondos y salir: `);
+\nIngrese saldo a depositar o 0 para retirar fondos y salir: `);
   
   if (nuevoSaldo === 0) {
     console.log(`\nGracias por jugar ${juego.getNombre()}. Saliendo al menu principal..`);
     return false;
   } else if (nuevoSaldo < 0) {
-      console.log('El saldo debe ser mayor a 0.');
+      console.error('\nEl saldo debe ser mayor a 0.');
       solicitarRecarga(juego, jugador);
     } else {
         if (jugador.cargarJuego(nuevoSaldo)) {
           juego.ingresarSaldo(nuevoSaldo);
-          console.log(`\nSe ingreso $${nuevoSaldo} al juego.
-Saldo actual: $${juego.getSaldoDisponible()}`);
+          console.log(`\nSe ingreso $${nuevoSaldo} al juego.\n\nSaldo actual: $${juego.getSaldoDisponible()}`);
           return true;
         }
       }
@@ -68,7 +68,7 @@ Saldo disponible: $${juego.getSaldoDisponible()}
 Su eleccion: `);
     
     if (accion < 1 || accion > 4) {
-      console.log('Opcion invalida. Intente nuevamente.');
+      console.log('\nOpcion invalida. Intente nuevamente.');
     }
   }
 
@@ -85,7 +85,7 @@ export function solicitarLineas(): number {
   let lineas: number = 0
 
   while (lineas < 1 || lineas > 5 || lineas === 4 ) {
-    lineas = readline.questionInt(`Ingrese el numero de lineas que desea apostar:
+    lineas = readline.questionInt(`\nIngrese el numero de lineas que desea apostar:
       1 - Linea central
       2 - Lineas externas
       3 - Todas las lineas
@@ -94,7 +94,7 @@ export function solicitarLineas(): number {
 Su eleccion: `);
     
     if (lineas < 1 || lineas > 5 || lineas === 4) {
-      console.log('Opcion invalida. Intente nuevamente.');
+      console.log('\nOpcion invalida. Intente nuevamente.');
     }
   }
 

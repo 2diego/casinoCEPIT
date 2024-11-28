@@ -94,7 +94,7 @@ Premio por linea: $${premioPorLinea}`);
           jugando = false;
           return;
         default:
-          console.log("Opcion no valida.");
+          console.error("Opcion no valida.");
           break;
       }
       if (this.getSaldoDisponible() < this.getApuestaMin()) {
