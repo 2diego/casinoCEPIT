@@ -53,7 +53,7 @@ Saldo actual: $${juego.getSaldoDisponible()}`);
       return false;
 }
 
-export function menuTragamonedas(): number {
+export function menuTragamonedas(juego: Juego): number {
   let accion: number = 0
   
   while (accion < 1 || accion > 4) {
@@ -62,6 +62,8 @@ export function menuTragamonedas(): number {
       2 - Ingresar saldo
       3 - Ver instrucciones
       4 - Retirar saldo y salir
+
+Saldo disponible: $${juego.getSaldoDisponible()}
       
 Su eleccion: `);
     
