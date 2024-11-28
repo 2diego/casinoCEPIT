@@ -1,5 +1,6 @@
 import { TragamonedasClasico } from "../juegos/TragamonedasClasico";
 import { TragamonedasBonus } from "../juegos/TragamonedasBonus";
+import { Bacara } from "../juegos/Bacara";
 import { Juego } from "../models/Juego";
 
 interface DetallesTragamonedasClasico  {
@@ -25,7 +26,14 @@ interface DetallesTragamonedasBonus {
   apuestaMax: number
 }
 */
-type DetallesJuego = DetallesTragamonedasClasico | DetallesTragamonedasBonus; // | DetallesBlackjack
+interface DetallesBacara {
+  tipo: "bacara",
+  nombre: string,
+  cartas: string[],
+  apuestaMin: number,
+  apuestaMax: number
+}
+type DetallesJuego = DetallesTragamonedasClasico | DetallesTragamonedasBonus | DetallesBacara; // | DetallesBlackjack
 
 export class GameFactory {
   public static crearJuego(detalles: DetallesJuego): Juego | null {
@@ -34,6 +42,10 @@ export class GameFactory {
         return new TragamonedasClasico(detalles.nombre, detalles.simbolos, detalles.apuestaMin, detalles.apuestaMax);
       case "tragamonedas-bonus":
         return new TragamonedasBonus(detalles.nombre, detalles.simbolos, detalles.apuestaMin, detalles.apuestaMax) as TragamonedasBonus;
+      /*case "blackjack":*/
+      /*  return new Blackjack(detalles.name, detalles.apuestaMin, detalles.apuestaMax);*/
+      case "bacara":
+        return new Bacara(detalles.nombre, detalles.cartas, detalles.apuestaMin, detalles.apuestaMax);
       default:
         console.log("Juego no encontrado");
         return null;

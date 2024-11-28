@@ -32,6 +32,16 @@ function main(){
     tragamonedasBonus.agregarBonus(new BonusGirosGratis("🪙", 2));
     casino.ingresarJuego(tragamonedasBonus);
   }
+  const bacara = GameFactory.crearJuego({
+    tipo: "bacara",
+    nombre: "Bacara",
+    cartas: ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"],
+    apuestaMin: 50,
+    apuestaMax: 200,
+  });
+  if (bacara) {
+    casino.ingresarJuego(bacara);
+  }
 
   
   console.log(`\n---------- Bienvenido al Casino CEPIT ----------`);
@@ -63,7 +73,7 @@ function main(){
   while(enCasino){
     const eleccion: string = readline.question(`\nElija una opcion:
     1 - Ver juegos
-    2 - Ver saldos
+    2 - Ver montos de los jugadores
     3 - Salir
     \nSu eleccion: `);
 
@@ -88,7 +98,7 @@ function main(){
         enCasino = false;
         break;
       default:
-        console.log("\nOpcion invalida");
+        console.error("\nOpcion invalida");
         break;
     }
   }
