@@ -7,7 +7,7 @@ import {
 } from "../utils/utils";
 
 export class TragamonedasClasico extends Tragamonedas {
-  constructor(
+  constructor( //codigo repetido
     nombre: string,
     simbolos: string[] = [],
     apuestaMinima: number = 0,
@@ -19,7 +19,6 @@ export class TragamonedasClasico extends Tragamonedas {
 
   //solucionado el poder apostar y calcularPremio
   public apostar(): void {
-    console.log(`Su saldo disponible es de $${this.getSaldoDisponible()}`);
     let apuesta = solicitarApuesta();
     if (apuesta !== this.getApuestaMin() && apuesta !== this.getApuestaMax()) {
       //mejorar validacion
@@ -27,7 +26,7 @@ export class TragamonedasClasico extends Tragamonedas {
         `\nLa apuesta debe ser $${this.getApuestaMin()} o $${this.getApuestaMax()}.`
       );
     } else if (this.validarApuesta(apuesta)) {
-      console.log(`\nApostaste $${apuesta}.\n`);
+      console.log(`\nApostaste $${apuesta}.`);
       this.setSaldoDisponible(this.getSaldoDisponible() - apuesta);
       this.setApuestaActual(apuesta);
       const resultado: string[][] = this.girar();
@@ -80,7 +79,7 @@ export class TragamonedasClasico extends Tragamonedas {
 
     let jugando: boolean = true;
     while (jugando) {
-      let nuevaAccion: number = menuTragamonedas();
+      let nuevaAccion: number = menuTragamonedas(this);
 
       switch (nuevaAccion) {
         case 1:

@@ -12,8 +12,9 @@ export class BonusGirosGratis implements Bonus {
     return this.iconoGanador;
   }
   activar(juego: Tragamonedas, apuestas: number, lineasApostadas: number): void {
-    console.log(`Se activaron ${this.cantidadGirosGratis} giros gratis.`);
+    console.log(`\nSe activaron ${this.cantidadGirosGratis} giros gratis.`);
     for (let i = 0; i < this.cantidadGirosGratis; i++) {
+      console.log(`\nGiro gratis N° ${i + 1}`);
       juego.apostar(apuestas, lineasApostadas, true);
     }
   }
