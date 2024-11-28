@@ -23,6 +23,7 @@ export class TragamonedasBonus extends Tragamonedas {
 
   protected calcularPremio(resultado: string[][], apuesta: number, lineasApostadas: number, inBonus: boolean = false): void {
     let premio: number = 0;
+    let premioPorLinea: number = 0;
     let lineas: number[][][] = lineasPosibles[lineasApostadas];
 
     for (let i = 0; i < lineasApostadas; i++) { //for (let linea of lineas) {
@@ -30,12 +31,14 @@ export class TragamonedasBonus extends Tragamonedas {
 
       if (simbolos.every((simbolo) => simbolo === simbolos[0])) {
         const bonus: Bonus | undefined = this.checkBonus(simbolos[0]);
-        let multiplicador: number = this.getSimbolos().indexOf(simbolos[0]) + 1;
-        premio += apuesta * multiplicador;
-        if (premio > 0) {
-          console.log(`\nGanaste!
-Premio: $${premio}`);
-          this.ingresarSaldo(premio);
+        let multiplicador: number = this.getSimbolos().indexOf(simbolos[0]) + 2;
+        premioPorLinea += apuesta * multiplicador;
+        if (premioPorLinea > 0) {
+          console.log(`\nGanaste con tres ${simbolos[0]}!
+Premio por linea: $${premioPorLinea}`);
+          this.ingresarSaldo(premioPorLinea);
+          premio += premioPorLinea;
+          premioPorLinea = 0;
         }
         if (bonus && !inBonus) {
           bonus.activar(this, apuesta, lineasApostadas);
@@ -45,7 +48,6 @@ Premio: $${premio}`);
     if (premio === 0) {
       console.log(`\nNo tuviste suerte esta vez!`);
     }
-    
   }
 
   jugar(jugadores: Jugador[]): void {
