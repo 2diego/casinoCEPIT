@@ -128,7 +128,7 @@ export class Bacara implements Juego {
 
     apostar(): void {
         console.log(`\nSu saldo disponible es de $${this.getSaldoDisponible()}`);
-        let apuesta = solicitarApuesta();
+        let apuesta = solicitarApuesta(this.getApuestaMin(), this.getApuestaMax());
         if (apuesta !== this.getApuestaMin() && apuesta !== this.getApuestaMax()) {
             console.error(`\nLa apuesta debe ser $${this.getApuestaMin()} o $${this.getApuestaMax()}.`);
         } else if (this.validarApuesta(apuesta)) {

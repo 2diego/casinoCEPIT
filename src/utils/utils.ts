@@ -75,8 +75,16 @@ Su eleccion: `);
   return accion;
 }
 
-export function solicitarApuesta(): number {
-  let apuesta: number = readline.questionInt('\nIngrese el monto que desea apostar por linea: ');
+export function solicitarApuesta(apuestaMin: number, apuestaMax: number): number {
+  function frase(): string {
+    if (apuestaMax === 0) {
+      return ""
+    } else {
+        return ` ($${apuestaMin} o $${apuestaMax})`  
+      }
+  }
+
+  let apuesta: number = readline.questionInt(`\nIngrese el monto que desea apostar por linea${frase()}: `);
 
   return apuesta;
 }

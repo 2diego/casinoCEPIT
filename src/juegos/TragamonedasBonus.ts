@@ -40,9 +40,9 @@ Premio por linea: $${premioPorLinea}`);
           
         if (!inBonus) {
         const bonus: Bonus | undefined = this.checkBonus(simbolos[0]);
-        if (bonus) {
-          bonusPorActivar.push(bonus);
-          }
+          if (bonus) {
+            bonusPorActivar.push(bonus);
+            }
         }
       }
     }
@@ -51,7 +51,9 @@ Premio por linea: $${premioPorLinea}`);
     }
 
     if (bonusPorActivar.length > 0) {
+      console.log(`\nGanaste ${bonusPorActivar.length} bonus!`);
       for (let i = 0; i < bonusPorActivar.length; i++) {
+        console.log(`\nBonus N° ${i + 1}`);
         bonusPorActivar[i].activar(this, apuesta, lineasApostadas);
       }
     }
@@ -72,7 +74,7 @@ Premio por linea: $${premioPorLinea}`);
 
       switch (accion) {
         case 1:
-          let apuesta: number = solicitarApuesta();
+          let apuesta: number = solicitarApuesta(this.getApuestaMin(), this.getApuestaMax());
           let lineasApostadas: number = solicitarLineas();
           let totalApostado: number = apuesta * lineasApostadas;
           if (this.validarApuesta(totalApostado)) {
@@ -97,7 +99,7 @@ Premio por linea: $${premioPorLinea}`);
           console.error("Opcion no valida.");
           break;
       }
-      if (this.getSaldoDisponible() < this.getApuestaMin()) {
+      if (this.getSaldoDisponible() <= this.getApuestaMin()) {
         if(!solicitarRecarga(this, jugador)){
           this.retirarSaldo(jugador);
           jugando = false;
