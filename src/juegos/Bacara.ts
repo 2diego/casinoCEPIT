@@ -2,29 +2,29 @@ import { Juego } from "../models/Juego";
 import { Jugador } from "../models/Jugador";
 import { Mazo } from "../utils/Mazo";
 import { Carta } from "../utils/Carta";
-import { solicitarApuesta, solicitarRecarga, solicitarSaldo, validarSaldoInicial } from "../utils/utils";
+import { solicitarApuesta, solicitarRecarga, solicitarSaldo, validarSaldoInicial, verInstrucciones } from "../utils/utils";
 import fs from 'fs';
 import * as readline from 'readline-sync';
 
 export class Bacara implements Juego {
     private nombre: string;
     private saldoDisponible: number;
-    private cartas: string[];
+    private cartas: Mazo;
     private apuestaMin: number;
     private apuestaMax: number;
     private apuestaActual: number = 0;
 
-    constructor(nombre: string, cartas: string[], apuestaMin: number = 0, apuestaMax: number = 0) {
+    constructor(nombre: string, apuestaMin: number = 0, apuestaMax: number = 0) {
         this.nombre = nombre;
         this.saldoDisponible = 0;
-        this.cartas = cartas;
+        this.cartas = new Mazo;
         if (apuestaMin < 0 || apuestaMax < 0) {
             console.error("Las apuestas minima y maxima no pueden ser negativas.");
         }
         if (apuestaMax > 0 && apuestaMin > apuestaMax) {
             console.error("La apuesta minima no puede ser mayor que la apuesta maxima.");
         }
-        this.apuestaMin = apuestaMin;
+        this.apuestaMin = apuestaMin;//probar validaciones en constructor
         this.apuestaMax = apuestaMax;
     }
 
@@ -44,7 +44,7 @@ export class Bacara implements Juego {
         return this.apuestaMax;
     }
 
-    getCartas(): string[] {
+    getCartas(): Mazo {
         return this.cartas;
     }
 
@@ -67,9 +67,9 @@ export class Bacara implements Juego {
         this.saldoDisponible += saldo;
     }
 
-    public agregarSaldo(jugador: Jugador): number {
-        const saldo: number = solicitarSaldo();
-        if (jugador.cargarJuego(saldo)) {
+    public agregarSaldo(jugador: Jugador): number { //Si el manejo de saldo es igual para todos los juegos
+        const saldo: number = solicitarSaldo();     //hacer una clase SaldoDisponible como si fuera un repository
+        if (jugador.cargarJuego(saldo)) {           //para manejar la logica de saldo
             this.ingresarSaldo(saldo);
             console.log(`\nSe ingreso $${saldo} al juego.`);
         }
@@ -82,12 +82,6 @@ export class Bacara implements Juego {
         jugador.sumarGanancia(saldoRetirar);
         console.log(`\nHas retirado: $${saldoRetirar}`);
         return saldoRetirar;
-    }
-
-    public verInstrucciones(): void {
-        console.log(`\n---------- Instrucciones de Bacara ----------`);
-        const datos = fs.readFileSync(`../src/instrucciones/bacara.txt`, 'utf-8');
-        console.log(datos);
     }
 
     protected setSaldoInicial(jugador: Jugador): void {
@@ -105,7 +99,7 @@ export class Bacara implements Juego {
         this.ingresarSaldo(saldoInicial);
     }
 
-    public validarApuesta(monto: number): boolean {
+    public validarApuesta(monto: number): boolean { //validarApuesta iria en utils?
         if (monto <= 0) {
             console.error("\nLa apuesta debe ser mayor a 0.");
             return false;
@@ -127,8 +121,7 @@ export class Bacara implements Juego {
 
 
     apostar(): void {
-        console.log(`\nSu saldo disponible es de $${this.getSaldoDisponible()}`);
-        let apuesta = solicitarApuesta(this.getApuestaMin(), this.getApuestaMax());
+        let apuesta = solicitarApuesta(this, this.getApuestaMin(), this.getApuestaMax());
         if (apuesta !== this.getApuestaMin() && apuesta !== this.getApuestaMax()) {
             console.error(`\nLa apuesta debe ser $${this.getApuestaMin()} o $${this.getApuestaMax()}.`);
         } else if (this.validarApuesta(apuesta)) {
@@ -153,7 +146,7 @@ export class Bacara implements Juego {
 
         // gana el que mas cerca del 9 este
 
-        // si la suma de las cartas es 10 el total es 0
+        // si la suma de las cartas es 10 el total es 0 -> if suma > 9 => suma - 10
         // si la suma de las cartas es 11 el total es 1
         // si la suma de las cartas es 12 el total es 2
         // si la suma de las cartas es 13 el total es 3
@@ -180,8 +173,8 @@ export class Bacara implements Juego {
             return;
         }
 
-        let jugando: boolean = true;
-        while (jugando) {
+        let jugando: boolean = true; //menu utils no sirve para iniciar?
+        while (jugando) { // Desp un loop de mano/turno con otro menu con pedir carta, plantarse..
             let nuevaAccion = readline.question(`\nseleccione que desea hacer: 
             1 - Apostar
             2 - Ingresar saldo
@@ -196,7 +189,7 @@ export class Bacara implements Juego {
                     this.agregarSaldo(jugador[0]);
                     break;
                 case "3":
-                    this.verInstrucciones();
+                    verInstrucciones(this);
                     break;
                 case "4":
                     this.retirarSaldo(jugador[0]);

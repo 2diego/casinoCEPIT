@@ -1,3 +1,4 @@
+//Falta ingresar saldo / ingresar jugador
 import { GameFactory } from "./factories/GameFactory";
 import { Casino } from "./models/Casino";
 import { Jugador } from "./models/Jugador";

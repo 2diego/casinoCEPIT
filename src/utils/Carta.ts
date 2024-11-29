@@ -1,3 +1,5 @@
+import { Juego } from "../models/Juego";
+
 export class Carta {
   private simbolo: Palo;
   private valor: number;
@@ -35,17 +37,26 @@ export class Carta {
       } 
   }
 
-  calcularValor() {
-      let valorSinSimbolo = this.cartaMostrada.substring(0, this.cartaMostrada.length - 1);
+  calcularValor(juego: Juego): number {
+      let valorSinSimbolo: string = this.cartaMostrada.substring(0, this.cartaMostrada.length - 1);
       if (valorSinSimbolo === "A") {
-          return 11;
-      } else if (valorSinSimbolo === "J" || valorSinSimbolo === "Q" || valorSinSimbolo === "K") {
-          return 10;
-      } else {
-          return parseInt(valorSinSimbolo);
-      }
+        switch (juego.getNombre()) {
+          case "Blackjack":
+            return 11;
+          case "Bacara":
+            return 1;
+          }
+        } else if (valorSinSimbolo === "J" || valorSinSimbolo === "Q" || valorSinSimbolo === "K") {
+            switch (juego.getNombre()) {
+              case "Blackjack":
+                return 10;
+              case "Bacara":
+                return 0;
+              }
+          }
+      return parseInt(valorSinSimbolo);
+    }
   }
-}
 
 
 

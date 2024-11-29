@@ -45,7 +45,7 @@ export class GameFactory {
       /*case "blackjack":*/
       /*  return new Blackjack(detalles.name, detalles.apuestaMin, detalles.apuestaMax);*/
       case "bacara":
-        return new Bacara(detalles.nombre, detalles.cartas, detalles.apuestaMin, detalles.apuestaMax);
+        return new Bacara(detalles.nombre, detalles.apuestaMin, detalles.apuestaMax);
       default:
         console.log("Juego no encontrado");
         return null;

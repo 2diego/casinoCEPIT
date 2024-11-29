@@ -1,6 +1,7 @@
 import { Jugador } from '../models/Jugador';
 import { Juego } from '../models/Juego';
 import * as readline from 'readline-sync';
+import fs from 'fs';
 
 //Utils juegos
 export function validarSaldoInicial(apuestaMin: number): number {
@@ -53,7 +54,7 @@ export function solicitarRecarga(juego: Juego, jugador: Jugador): boolean {
       return false;
 }
 
-export function menuTragamonedas(juego: Juego): number {
+export function menuJuegos(juego: Juego): number {
   let accion: number = 0
   
   while (accion < 1 || accion > 4) {
@@ -75,16 +76,19 @@ Su eleccion: `);
   return accion;
 }
 
-export function solicitarApuesta(apuestaMin: number, apuestaMax: number): number {
+export function solicitarApuesta(juego: Juego, apuestaMin: number, apuestaMax: number): number {
   function frase(): string {
-    if (apuestaMax === 0) {
-      return ""
-    } else {
-        return ` ($${apuestaMin} o $${apuestaMax})`  
-      }
-  }
+    if (juego.getNombre() === "Tragamonedas clasico con bonus") {
+      return " por linea";
+    } else if (juego.getNombre() === "Tragamonedas clasico") {
+        return ` ($${apuestaMin} o $${apuestaMax})`;
+      } else if (juego.getNombre() === "Blackjack") {
+          return `entre $${juego.getApuestaMin()} y $${juego.getApuestaMax()}`;
+        }
+      return "";
+    }
 
-  let apuesta: number = readline.questionInt(`\nIngrese el monto que desea apostar por linea${frase()}: `);
+  let apuesta: number = readline.questionInt(`\nIngrese el monto que desea apostar${frase()}: `);
 
   return apuesta;
 }
@@ -124,6 +128,23 @@ Confirmar apuesta (s/n): `);
 export function solicitarSaldo(): number {
   const saldo :number = readline.questionInt("\nIngrese el saldo a agregar: ");
   return saldo;
+}
+
+export function verInstrucciones(juego: Juego): void {
+  console.log(`\n---------- Instrucciones de ${juego.getNombre()} ----------`);
+  let name: string = juego.getNombre().toLowerCase().replace(" ", "-");
+  const datos = fs.readFileSync(`../src/instrucciones/${name}.txt`, 'utf-8');
+  console.log(datos);
+}
+
+export function pideCarta(): string {
+  let carta: string = readline.question("\nDesea pedir carta (s/n): ");
+  return carta.toLowerCase();
+}
+
+export function juegaDeNuevo(): string {
+  let jugarDeNuevo: string = readline.question("\nDesea jugar de nuevo (s/n): ");
+  return jugarDeNuevo.toLowerCase();
 }
 
 //Utils main

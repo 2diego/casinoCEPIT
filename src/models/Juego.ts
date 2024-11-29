@@ -7,4 +7,6 @@ export interface Juego {
   retirarSaldo(jugador:Jugador): void;
   getSaldoDisponible(): number;
   jugar(jugador: Jugador[]): void;
+  getApuestaMin(): number;
+  getApuestaMax(): number;
 }
