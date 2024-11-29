@@ -4,7 +4,7 @@ import { Jugador } from "../models/Jugador";
 import { elegirJugador, solicitarRecarga, menuTragamonedas, solicitarApuesta, solicitarLineas, confirmarApuesta } from "../utils/utils";
 import { lineasPosibles } from "../utils/Lineas";
 
-export class TragamonedasBonus extends Tragamonedas {
+export class TragamonedasBonus extends Tragamonedas {//falta usar apuestaActual, Lineas.ts -> lineas.ts
   private bonus: Bonus[] = [];
   
   public agregarBonus(bonus: Bonus): void {
@@ -67,6 +67,9 @@ Premio por linea: $${premioPorLinea}`);
     }
 
     this.setSaldoInicial(jugador);
+    if (this.getSaldoDisponible() === 0) {
+      return;
+    }
 
     let jugando: boolean = true;
     while (jugando) {
