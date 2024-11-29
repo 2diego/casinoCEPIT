@@ -14,18 +14,19 @@ export class Blackjack implements Juego {
     private jugadores: Jugador[];
     private apuestaMin: number;
     private apuestaMax: number;
+    private apuestaActual: number = 0;
 
 
-    constructor(apuestaMin: number = 0, apuestaMax: number = 0) {
-        this.nombre = "Blackjack";
+    constructor(nombre: string, apuestaMin: number = 0, apuestaMax: number = 0) {
+        this.nombre = nombre;
         this.saldoDisponible = 0;
         this.mazo = new Mazo();
         this.jugadores = [];
         if (apuestaMin < 0 || apuestaMax < 0) {
-            throw new Error("Las apuestas minima y maxima no pueden ser negativas.");
+            console.error("Las apuestas minima y maxima no pueden ser negativas.");
         }
         if (apuestaMax > 0 && apuestaMin > apuestaMax) {
-            throw new Error("La apuesta minima no puede ser mayor que la apuesta maxima.");
+            console.error("La apuesta minima no puede ser mayor que la apuesta maxima.");
         }
         this.apuestaMin = apuestaMin;
         this.apuestaMax = apuestaMax;
@@ -53,6 +54,14 @@ export class Blackjack implements Juego {
 
     getJugadores(): Jugador[] {
         return this.jugadores;
+    }
+
+    getApuestaActual(): number {
+        return this.apuestaActual;
+    }
+
+    setApuestaActual(apuesta: number): void {
+        this.apuestaActual = apuesta;
     }
 
     public verInstrucciones(): void {
@@ -116,8 +125,9 @@ export class Blackjack implements Juego {
     apostar(): void {
         let apuesta = readline.questionInt(`\nIngrese un monto entre $${this.getApuestaMin()} y $${this.getApuestaMax()} para apostar: `);
         if (this.getSaldoDisponible() >= apuesta) {
-            if (apuesta <= this.getApuestaMin() || apuesta >= this.getApuestaMax()) {
+            if (apuesta <= this.getApuestaMin() && apuesta >= this.getApuestaMax()) {
                 this.saldoDisponible -= apuesta;
+                this.apuestaActual = apuesta;
                 console.log(`\nHas apostado: $${apuesta}`);
             } else {
                 console.log(`\nLa apuesta debe ser entre $${this.getApuestaMin()} y $${this.getApuestaMax()}.`);
@@ -127,9 +137,18 @@ export class Blackjack implements Juego {
         }
     }
 
-    calcularPremio(): void {
+    calcularPremio(tipoPremio: string): number {
         let premio: number = 0;
-        
+        if (tipoPremio === "x2") {
+            premio = this.getApuestaActual() * 2;
+        } else if (tipoPremio === "x5") {
+            premio = this.getApuestaActual() * 5;
+        } else if (tipoPremio === "empate") {
+            premio = this.getApuestaActual();
+        } else if (tipoPremio === "perder") {
+            premio = 0;
+        }
+        return premio;
     }
 
     jugar(jugador: Jugador[]): void {
@@ -202,11 +221,14 @@ export class Blackjack implements Juego {
 
 
             let jugadorSePlanta: boolean = false;
+            let JugadorBlackjack: boolean = false;
+            let CrupierBlackjack: boolean = false;
 
             // Verificar ganador por blackjack    
             if (puntajeJugador === 21) {
-                console.log("\n¡Felicidades! Has ganado.");
+                console.log("\nBLACKJACK!");
                 jugadorSePlanta = true;
+                JugadorBlackjack = true;
                 break;
             }
             // Jugador no tiene blackjack y puede pedir carta
@@ -251,7 +273,8 @@ export class Blackjack implements Juego {
                 puntajeCrupier += crupierMano[1].calcularValor();
                 console.log(`\nEl Crupier tiene un puntaje de: ${puntajeCrupier}`);
                 if (puntajeCrupier === 21) {                        // Crupier tiene blackjack
-                    console.log("\nEl Crupier ha ganado.");
+                    console.log(`\nEl Crupier tiene un blackjack`);
+                    CrupierBlackjack = true;
                     break;
                 } else {
                     while (puntajeCrupier < 17) {                      // Crupier pide carta
@@ -268,7 +291,7 @@ export class Blackjack implements Juego {
                             } else {
                                 console.log(`\nLa carta del Crupier es: ${crupierMano[crupierMano.length - 1].getCartaMostrada()}`);            // Mostrar ultima carta del Crupier
                                 console.log(`\nEl Crupier tiene un puntaje de: ${puntajeCrupier}`);
-                                console.log("\nEl Crupier se paso de 21");                                         // Crupier pasa de 21
+                                console.log("\nEl Crupier se paso de 21");                                    // Crupier pasa de 21                                     
                                 break;
                             }
                         }
@@ -276,13 +299,33 @@ export class Blackjack implements Juego {
                 }
             }
 
+            if (JugadorBlackjack && CrupierBlackjack) {                                     // Ambos jugadores tienen blackjack
+                console.log("\nEs un empate.");
+                console.log(`\nSe devuelve $${this.apuestaActual} al jugador.`);
+                this.ingresarSaldo(this.calcularPremio("empate"));
+            } else if (JugadorBlackjack && !CrupierBlackjack) {                             // El jugador tiene blackjack
+                console.log("\n¡Felicidades! Ganaste esta ronda.");
+                console.log(`\nHas ganado $${this.calcularPremio("x5")}.`);
+                this.ingresarSaldo(this.calcularPremio("x5"));
+            } else if (!JugadorBlackjack && CrupierBlackjack) {                             // El crupier tiene blackjack
+                console.log("\nEl Crupier ganó esta ronda.");
+                console.log(`\nHas perdido $${this.apuestaActual}.`);
+                this.ingresarSaldo(this.calcularPremio("perder"));
+            }
+
             if (puntajeJugador <= 21 && puntajeCrupier <= 21) {                            // Validaciones cuando ambos jugadores tienen menos de 21
                 if (puntajeJugador > puntajeCrupier) {
                     console.log("\n¡Felicidades! Ganaste esta ronda.");
+                    console.log(`\nHas ganado $${this.calcularPremio("x2")}.`);
+                    this.ingresarSaldo(this.calcularPremio("x2"));
                 } else if (puntajeJugador < puntajeCrupier) {
                     console.log("\nEl Crupier ganó esta ronda.");
+                    console.log(`\nHas perdido $${this.apuestaActual}.`);
+                    this.ingresarSaldo(this.calcularPremio("perder"));
                 } else {
                     console.log("\nEs un empate.");
+                    console.log(`\nSe devuelve $${this.apuestaActual} al jugador.`);
+                    this.ingresarSaldo(this.calcularPremio("empate"));
                 }
             }
 
