@@ -1,8 +1,9 @@
 import { Juego } from "../models/Juego";
 import { Jugador } from "../models/Jugador";
-import { validarSaldoInicial } from "../utils/utils";
 import { Mazo } from "../utils/Mazo";
 import { Carta } from "../utils/Carta";
+import { solicitarApuesta, solicitarRecarga, solicitarSaldo, validarSaldoInicial } from "../utils/utils";
+import fs from 'fs';
 import * as readline from 'readline-sync';
 
 
@@ -54,6 +55,20 @@ export class Blackjack implements Juego {
         return this.jugadores;
     }
 
+    public verInstrucciones(): void {
+        console.log(`\n---------- Instrucciones de Blackjack ----------`);
+        const datos = fs.readFileSync(`../src/instrucciones/blackjack.txt`, 'utf-8');
+        console.log(datos);
+    }
+
+    public agregarSaldo(jugador: Jugador): number {
+        const saldo: number = solicitarSaldo();
+        if (jugador.cargarJuego(saldo)) {
+            this.ingresarSaldo(saldo);
+            console.log(`\nSe ingreso $${saldo} al juego.`);
+        }
+        return saldo;
+    }
 
     ingresarSaldo(saldo: number): void {
         if (saldo < 0) {
@@ -107,6 +122,39 @@ export class Blackjack implements Juego {
         }
         let jugando = true;
         while (jugando) {
+            let nuevaAccion = readline.question(`\nseleccione que desea hacer: 
+                1 - Apostar
+                2 - Ingresar saldo
+                3 - Ver instrucciones
+                4 - Retirar saldo y salir
+              \nSu eleccion `);
+                switch (nuevaAccion) {
+                    case "1":
+                        //   this.apostar();
+                        break;
+                    case "2":
+                        this.agregarSaldo(jugador[0]);
+                        break;
+                    case "3":
+                        this.verInstrucciones();
+                        break;
+                    case "4":
+                        this.retirarSaldo(jugador[0]);
+                        console.log("\nGracias por jugar.");
+                        jugando = false;
+                        return;
+                    default:
+                        console.error("\nOpcion no valida.");
+                        break;
+                }
+    
+                if (this.getSaldoDisponible() < this.getApuestaMin()) {
+                    if (!solicitarRecarga(this, jugador[0])) {
+                        this.retirarSaldo(jugador[0]);
+                        jugando = false;
+                    };
+    
+                }
 
             let jugadorMano: Carta[] = [];
             let crupierMano: Carta[] = [];
@@ -142,7 +190,7 @@ export class Blackjack implements Juego {
                 break;
             }
             // Jugador no tiene blackjack y puede pedir carta
-            if (puntajeJugador < 21 || !jugadorSePlanta) {
+            if (puntajeJugador < 21 || !jugadorSePlanta) {                      // Turno del jugador
                 console.log(`\nSu puntaje es: ${puntajeJugador}`);
                 let respuesta: string = readline.question(`\n¿Desea pedir una carta? (s/n): `);
                 if (respuesta.toLocaleLowerCase() === "n") {        // Jugador planta
@@ -208,7 +256,7 @@ export class Blackjack implements Juego {
                 }
             }
 
-            if (puntajeJugador <= 21 && puntajeCrupier <= 21) {
+            if (puntajeJugador <= 21 && puntajeCrupier <= 21) {                            // Validaciones cuando ambos jugadores tienen menos de 21
                 if (puntajeJugador > puntajeCrupier) {
                     console.log("\n¡Felicidades! Ganaste esta ronda.");
                 } else if (puntajeJugador < puntajeCrupier) {

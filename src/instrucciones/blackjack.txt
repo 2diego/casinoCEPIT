@@ -1,0 +1,45 @@
+Objetivo del juego
+-El objetivo es tener un puntaje lo más cercano posible a 21, pero sin pasarse.
+-Compites contra el crupier (la banca), no contra otros jugadores.
+------------------------------------------------------------
+Valor de las cartas
+-Cartas numéricas (2-10): Valen su número.
+-Figuras (J, Q, K): Valen 10 puntos.
+-As (A): Puede valer 1 o 11, según lo que más te convenga.
+------------------------------------------------------------
+Cómo se juega
+
+Inicio:
+
+-Tanto tú como el crupier reciben dos cartas.
+-Una de las cartas del crupier está oculta (boca abajo).
+
+Tu turno:
+
+-Mira tus cartas y decide:
+-Pedir carta (hit): Recibes otra carta para aumentar tu puntaje.
+-Plantarte (stand): Mantienes tu puntaje actual y cedes el turno al crupier.
+-Nota: Si tu puntaje supera 21, pierdes automáticamente (esto se llama "pasarse").
+
+Turno del crupier:
+
+-El crupier revela su carta oculta.
+-Debe seguir sacando cartas hasta que su puntaje sea 17 o más.
+-Si se pasa de 21, tú ganas automáticamente.
+------------------------------------------------------------
+Resultados:
+
+Ganas si:
+-Tu puntaje está más cerca de 21 que el del crupier.
+-El crupier se pasa de 21 y tú no.
+Pierdes si:
+-Te pasas de 21.
+-El puntaje del crupier está más cerca de 21 que el tuyo.
+Empatas si:
+-Tú y el crupier tienen el mismo puntaje (no ganas ni pierdes).
+-------------------------------------------------------------
+Ejemplo rápido
+-Tus cartas: 10 y 6 (puntaje 16).
+-Decides pedir carta y recibes un 4 (puntaje 20). Te plantas.
+-El crupier tiene 7 y 9 (puntaje 16) y saca un 5 (puntaje 21).
+-El crupier gana porque tiene 21.
