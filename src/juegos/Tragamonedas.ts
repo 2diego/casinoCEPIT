@@ -1,20 +1,17 @@
 import { Jugador } from "../models/Jugador";
 import { Juego } from "../models/Juego";
 import { solicitarSaldo, validarSaldoInicial } from "../utils/utils";
-import fs from 'fs';
 
 export abstract class Tragamonedas implements Juego {
   private nombre: string;
   private simbolos: string[];
-  //agregue simbolos otro para que se guarden los simbolos que se crean al girar
-  // private simbolosGenerados: string[] = [];
   private apuestaMin: number;
   private apuestaMax: number;
   private saldoDisponible: number;
   protected filas: number;
   protected columnas: number;
-   //agregue apuestaActual 
   private apuestaActual: number = 0;
+  private resultadoActual: string[][] = [];
  
 
   constructor(nombre: string, simbolos: string[] = [], apuestaMinima: number = 0, apuestaMaxima: number = 0) {
@@ -31,7 +28,6 @@ export abstract class Tragamonedas implements Juego {
     this.apuestaMax = apuestaMaxima;
     this.filas = 3;
     this.columnas = 3;
-    this.filas = 3;
   }
 
   public getNombre(): string {
@@ -53,10 +49,10 @@ export abstract class Tragamonedas implements Juego {
   public getSimbolos(): string[] {
     return this.simbolos;
   }
-  //agregue getsimbolosGenerados
-  // getSimbolosGenerados(): string[] {
-  //   return this.simbolosGenerados;
-  // }
+  
+  getResultadoActual(): string[][] {
+    return this.resultadoActual;
+  }
   
   public getFilas(): number {
     return this.filas;
@@ -65,25 +61,18 @@ export abstract class Tragamonedas implements Juego {
   public getColumnas(): number {
     return this.columnas;
   }
-  //Agregue getApuestaActual
+  
   getApuestaActual(): number {
     return this.apuestaActual;
   }
-
-  public verInstrucciones(): void {
-    console.log(`\n---------- Instrucciones de Tragamonedas Clasico ----------`);
-    let name: string = this.getNombre().toLowerCase().replace(" ", "-");
-    const datos = fs.readFileSync(`../src/instrucciones/${name}.txt`, 'utf-8');
-    console.log(datos);
-  }
-
-  public ingresarSaldo(saldo: number): void {//mejorar validacion
+  
+  public ingresarSaldo(saldo: number): void {
     if (saldo < 0) {
       console.error("\nEl saldo ingresado no puede ser negativo.");
     }
-    this.saldoDisponible += saldo;
+    this.saldoDisponible += saldo; 
   }
-  //nuevo metodo agregado en el menu de tragamonedas para agregar saldo
+  
   public agregarSaldo(jugador: Jugador): number {
     const saldo: number = solicitarSaldo();
     if (jugador.cargarJuego(saldo)) {
@@ -93,9 +82,6 @@ export abstract class Tragamonedas implements Juego {
     return saldo;
   }
 
-
-  
-  //agregue cuanto retira el jugador e hice que se le sume al monto del jugador
   public retirarSaldo(jugador: Jugador): number {
     const saldoRetirar = this.saldoDisponible;
     this.saldoDisponible = 0;
@@ -104,14 +90,14 @@ export abstract class Tragamonedas implements Juego {
     return saldoRetirar;
   }
 
-  public setSaldoDisponible(saldo: number): void {
+  public setSaldoDisponible(saldo: number): void { //esto no va?
     this.saldoDisponible = saldo;
   }
 
-  //agregue setApuestaActual
   setApuestaActual(apuesta: number): void {
     this.apuestaActual = apuesta;
   }
+
   protected setSaldoInicial(jugador: Jugador): void {
     let saldoInicial: number = validarSaldoInicial(this.getApuestaMin());
     if (saldoInicial === 0) {
@@ -127,12 +113,16 @@ export abstract class Tragamonedas implements Juego {
     this.ingresarSaldo(saldoInicial);
   }
 
+  protected setResultadoActual(): void {
+    this.girar();
+  }
+
   obtenerSimbolosAleatorios(): string {
     const index = Math.floor(Math.random() * this.simbolos.length);
     return this.getSimbolos()[index];
   }
 
-  public girar(): string[][] {
+  public girar():  void {
     let resultado: string[][] = [];
 
     for (let i = 0; i < this.getFilas(); i++) {
@@ -143,14 +133,14 @@ export abstract class Tragamonedas implements Juego {
       }
       resultado.push(filaSimbolos);
     }
-    return resultado;
+    this.resultadoActual = resultado;
   }
 
   
-  public mostrarResultado(resultado: string[][]): void {
+  public mostrarResultado(): void {
     console.log(`\n`)
     for (let i = 0; i < this.getFilas() ; i++) {
-      console.log(`${resultado[i][0]} | ${resultado[i][1]} | ${resultado[i][2]}`);
+      console.log(`${this.getResultadoActual()[i][0]} | ${this.getResultadoActual()[i][1]} | ${this.getResultadoActual()[i][2]}`);
     }
   }
 
@@ -176,12 +166,7 @@ export abstract class Tragamonedas implements Juego {
 
   abstract jugar(jugador: Jugador[]): void;
 
-  //Metodos privados que cambian dependiendo de la logica del juego y se usan en jugar()
-  public abstract apostar(monto:number, lineasApostadas: number, inBonus: boolean): void;
-  /*validarApuesta publica?
-  en apostar se elijen detalles de la apuesta, se calcula monto final, if (validarApuesta(monto)) { 
-  setSaldoDisponible, girar, mostrarResultado, calcularPremio, ingresarSaldo }
-  */
+  public abstract apostar(lineasApostadas: number, inBonus: boolean): void;
  
-  protected abstract calcularPremio(resultado: string[][], apuesta:number, lineasApostadas: number): void;
+  protected abstract calcularPremio(lineasApostadas: number): void;
 }

@@ -1,8 +1,8 @@
 import { Bonus } from "../bonus/Bonus";
 import { Tragamonedas } from "./Tragamonedas";
 import { Jugador } from "../models/Jugador";
-import { elegirJugador, solicitarRecarga, menuTragamonedas, solicitarApuesta, solicitarLineas, confirmarApuesta } from "../utils/utils";
-import { lineasPosibles } from "../utils/Lineas";
+import { elegirJugador, solicitarRecarga, menuJuegos, solicitarApuesta, solicitarLineas, confirmarApuesta, verInstrucciones } from "../utils/utils";
+import { lineasPosibles } from "../utils/lineas";
 
 export class TragamonedasBonus extends Tragamonedas {
   private bonus: Bonus[] = [];
@@ -15,23 +15,23 @@ export class TragamonedasBonus extends Tragamonedas {
     return this.bonus.find((bonus) => bonus.getIconoGanador() === iconoGanador);
   }
 
-  public apostar(monto: number, lineasApostadas: number, inBonus: boolean = false): void {
-    let resultado: string[][] = this.girar();
-    this.mostrarResultado(resultado);
-    this.calcularPremio(resultado, monto, lineasApostadas, inBonus);
+  public apostar(lineasApostadas: number, inBonus: boolean = false): void {
+    this.girar();
+    this.mostrarResultado();
+    this.calcularPremio(lineasApostadas, inBonus);
   }
 
-  protected calcularPremio(resultado: string[][], apuesta: number, lineasApostadas: number, inBonus: boolean = false): void {
+  protected calcularPremio(lineasApostadas: number, inBonus: boolean = false): void {
     let premio: number = 0;
     let lineas: number[][][] = lineasPosibles[lineasApostadas];
     let bonusPorActivar: Bonus[] = []
 
     for (let i = 0; i < lineasApostadas; i++) { //for (let linea of lineas) {
-      let simbolos: string[] = lineas[i].map(([fila, columna]) => resultado[fila][columna]);
+      let simbolos: string[] = lineas[i].map(([fila, columna]) => this.getResultadoActual()[fila][columna]);
 
       if (simbolos.every((simbolo) => simbolo === simbolos[0])) {
         let multiplicador: number = this.getSimbolos().indexOf(simbolos[0]) + 2;
-        let premioPorLinea: number = apuesta * multiplicador;
+        let premioPorLinea: number = this.getApuestaActual() * multiplicador;
         
         console.log(`\nGanaste con tres ${simbolos[0]}!
 Premio por linea: $${premioPorLinea}`);
@@ -40,9 +40,9 @@ Premio por linea: $${premioPorLinea}`);
           
         if (!inBonus) {
         const bonus: Bonus | undefined = this.checkBonus(simbolos[0]);
-        if (bonus) {
-          bonusPorActivar.push(bonus);
-          }
+          if (bonus) {
+            bonusPorActivar.push(bonus);
+            }
         }
       }
     }
@@ -51,8 +51,10 @@ Premio por linea: $${premioPorLinea}`);
     }
 
     if (bonusPorActivar.length > 0) {
+      console.log(`\nGanaste ${bonusPorActivar.length} bonus!`);
       for (let i = 0; i < bonusPorActivar.length; i++) {
-        bonusPorActivar[i].activar(this, apuesta, lineasApostadas);
+        console.log(`\nBonus N° ${i + 1}`);
+        bonusPorActivar[i].activar(this, lineasApostadas);
       }
     }
   }
@@ -65,20 +67,23 @@ Premio por linea: $${premioPorLinea}`);
     }
 
     this.setSaldoInicial(jugador);
+    if (this.getSaldoDisponible() === 0) {
+      return;
+    }
 
     let jugando: boolean = true;
     while (jugando) {
-      let accion: number = menuTragamonedas(this);
+      let accion: number = menuJuegos(this);
 
       switch (accion) {
         case 1:
-          let apuesta: number = solicitarApuesta();
+          this.setApuestaActual(solicitarApuesta(this, this.getApuestaMin(), this.getApuestaMax()));
           let lineasApostadas: number = solicitarLineas();
-          let totalApostado: number = apuesta * lineasApostadas;
+          let totalApostado: number = this.getApuestaActual() * lineasApostadas;
           if (this.validarApuesta(totalApostado)) {
-            if (confirmarApuesta(apuesta, lineasApostadas)) {
+            if (confirmarApuesta(this.getApuestaActual(), lineasApostadas)) {
               this.setSaldoDisponible(this.getSaldoDisponible() - (totalApostado));
-              this.apostar(apuesta, lineasApostadas);
+              this.apostar(lineasApostadas);
             }
           }
           break;
@@ -86,7 +91,7 @@ Premio por linea: $${premioPorLinea}`);
           this.agregarSaldo(jugador);
           break;
         case 3:
-          this.verInstrucciones();//cargar archivo
+          verInstrucciones(this);
           break;
         case 4:
           console.log(`\nGracias por jugar ${this.getNombre()}.`);
@@ -97,7 +102,7 @@ Premio por linea: $${premioPorLinea}`);
           console.error("Opcion no valida.");
           break;
       }
-      if (this.getSaldoDisponible() < this.getApuestaMin()) {
+      if (this.getSaldoDisponible() <= this.getApuestaMin()) {
         if(!solicitarRecarga(this, jugador)){
           this.retirarSaldo(jugador);
           jugando = false;

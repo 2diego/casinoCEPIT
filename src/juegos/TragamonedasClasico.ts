@@ -1,37 +1,31 @@
 import { Tragamonedas } from "./Tragamonedas";
 import { Jugador } from "../models/Jugador";
-import {solicitarApuesta,solicitarRecarga,menuTragamonedas,} from "../utils/utils";
+import {solicitarApuesta, solicitarRecarga, menuJuegos, verInstrucciones} from "../utils/utils";
 
 export class TragamonedasClasico extends Tragamonedas {
-  constructor( //codigo repetido
-    nombre: string,
-    simbolos: string[] = [],
-    apuestaMinima: number = 0,
-    apuestaMaxima: number = 0
-  ) {
+  constructor(nombre: string, simbolos: string[] = [], apuestaMinima: number = 0, apuestaMaxima: number = 0) {
     super(nombre, simbolos, apuestaMinima, apuestaMaxima);
     this.filas = 1;
   }
-
  
   public apostar(): void {
-    let apuesta = solicitarApuesta();
+    let apuesta = solicitarApuesta(this, this.getApuestaMin(), this.getApuestaMax());
     if (apuesta !== this.getApuestaMin() && apuesta !== this.getApuestaMax()) {
       console.error(`\nLa apuesta debe ser $${this.getApuestaMin()} o $${this.getApuestaMax()}.`);
     } else if (this.validarApuesta(apuesta)) {
       console.log(`\nApostaste $${apuesta}.`);
       this.setSaldoDisponible(this.getSaldoDisponible() - apuesta);
       this.setApuestaActual(apuesta);
-      const resultado: string[][] = this.girar();
-      this.mostrarResultado(resultado);
-      this.calcularPremio(resultado);
+      this.girar();
+      this.mostrarResultado();
+      this.calcularPremio();
     }
   }
 
 
-  public calcularPremio(resultado: string[][]): void {
+  public calcularPremio(): void {
     let premio: number = 0;
-    // let simbolos= this.getSimbolosGenerados();
+    let resultado = this.getResultadoActual();
     if (resultado[0][0] === resultado[0][1] && resultado[0][1] === resultado[0][2]) {
       if (resultado[0][0] === "7️⃣") {
         premio += this.getApuestaActual() * 10;
@@ -58,13 +52,12 @@ export class TragamonedasClasico extends Tragamonedas {
 
     this.setSaldoInicial(jugador[0]);
     if (this.getSaldoDisponible() === 0) {
-      // Si no se pudo establecer el saldo inicial, retornamos y no se juega
       return;
     }
 
     let jugando: boolean = true;
     while (jugando) {
-      let nuevaAccion: number = menuTragamonedas(this);
+      let nuevaAccion: number = menuJuegos(this);
 
       switch (nuevaAccion) {
         case 1:
@@ -74,7 +67,7 @@ export class TragamonedasClasico extends Tragamonedas {
           this.agregarSaldo(jugador[0]);
           break;
         case 3:
-          this.verInstrucciones();
+          verInstrucciones(this);
           break;
         case 4:
           this.retirarSaldo(jugador[0]);
