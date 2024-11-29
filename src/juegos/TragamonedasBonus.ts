@@ -2,9 +2,9 @@ import { Bonus } from "../bonus/Bonus";
 import { Tragamonedas } from "./Tragamonedas";
 import { Jugador } from "../models/Jugador";
 import { elegirJugador, solicitarRecarga, menuTragamonedas, solicitarApuesta, solicitarLineas, confirmarApuesta } from "../utils/utils";
-import { lineasPosibles } from "../utils/Lineas";
+import { lineasPosibles } from "../utils/lineas";
 
-export class TragamonedasBonus extends Tragamonedas {//falta usar apuestaActual, Lineas.ts -> lineas.ts
+export class TragamonedasBonus extends Tragamonedas {
   private bonus: Bonus[] = [];
   
   public agregarBonus(bonus: Bonus): void {
@@ -15,13 +15,13 @@ export class TragamonedasBonus extends Tragamonedas {//falta usar apuestaActual,
     return this.bonus.find((bonus) => bonus.getIconoGanador() === iconoGanador);
   }
 
-  public apostar(monto: number, lineasApostadas: number, inBonus: boolean = false): void {
+  public apostar(lineasApostadas: number, inBonus: boolean = false): void {
     let resultado: string[][] = this.girar();
     this.mostrarResultado(resultado);
-    this.calcularPremio(resultado, monto, lineasApostadas, inBonus);
+    this.calcularPremio(resultado, lineasApostadas, inBonus);
   }
 
-  protected calcularPremio(resultado: string[][], apuesta: number, lineasApostadas: number, inBonus: boolean = false): void {
+  protected calcularPremio(resultado: string[][], lineasApostadas: number, inBonus: boolean = false): void {
     let premio: number = 0;
     let lineas: number[][][] = lineasPosibles[lineasApostadas];
     let bonusPorActivar: Bonus[] = []
@@ -31,7 +31,7 @@ export class TragamonedasBonus extends Tragamonedas {//falta usar apuestaActual,
 
       if (simbolos.every((simbolo) => simbolo === simbolos[0])) {
         let multiplicador: number = this.getSimbolos().indexOf(simbolos[0]) + 2;
-        let premioPorLinea: number = apuesta * multiplicador;
+        let premioPorLinea: number = this.getApuestaActual() * multiplicador;
         
         console.log(`\nGanaste con tres ${simbolos[0]}!
 Premio por linea: $${premioPorLinea}`);
@@ -54,7 +54,7 @@ Premio por linea: $${premioPorLinea}`);
       console.log(`\nGanaste ${bonusPorActivar.length} bonus!`);
       for (let i = 0; i < bonusPorActivar.length; i++) {
         console.log(`\nBonus N° ${i + 1}`);
-        bonusPorActivar[i].activar(this, apuesta, lineasApostadas);
+        bonusPorActivar[i].activar(this, lineasApostadas);
       }
     }
   }
@@ -77,13 +77,13 @@ Premio por linea: $${premioPorLinea}`);
 
       switch (accion) {
         case 1:
-          let apuesta: number = solicitarApuesta(this.getApuestaMin(), this.getApuestaMax());
+          this.setApuestaActual(solicitarApuesta(this.getApuestaMin(), this.getApuestaMax()));
           let lineasApostadas: number = solicitarLineas();
-          let totalApostado: number = apuesta * lineasApostadas;
+          let totalApostado: number = this.getApuestaActual() * lineasApostadas;
           if (this.validarApuesta(totalApostado)) {
-            if (confirmarApuesta(apuesta, lineasApostadas)) {
+            if (confirmarApuesta(this.getApuestaActual(), lineasApostadas)) {
               this.setSaldoDisponible(this.getSaldoDisponible() - (totalApostado));
-              this.apostar(apuesta, lineasApostadas);
+              this.apostar(lineasApostadas);
             }
           }
           break;
