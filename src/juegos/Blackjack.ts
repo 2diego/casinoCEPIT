@@ -112,6 +112,26 @@ export class Blackjack implements Juego {
         return saldoRetirar;
     }
 
+
+    apostar(): void {
+        let apuesta = readline.questionInt(`\nIngrese un monto entre $${this.getApuestaMin()} y $${this.getApuestaMax()} para apostar: `);
+        if (this.getSaldoDisponible() >= apuesta) {
+            if (apuesta <= this.getApuestaMin() || apuesta >= this.getApuestaMax()) {
+                this.saldoDisponible -= apuesta;
+                console.log(`\nHas apostado: $${apuesta}`);
+            } else {
+                console.log(`\nLa apuesta debe ser entre $${this.getApuestaMin()} y $${this.getApuestaMax()}.`);
+            }
+        } else {
+            console.log(`\nNo cuenta con saldo suficiente para apostar.`);
+        }
+    }
+
+    calcularPremio(): void {
+        let premio: number = 0;
+        
+    }
+
     jugar(jugador: Jugador[]): void {
         console.log(`\n---------- Bienvenido a ${this.getNombre()} ----------`);
 
@@ -128,33 +148,33 @@ export class Blackjack implements Juego {
                 3 - Ver instrucciones
                 4 - Retirar saldo y salir
               \nSu eleccion `);
-                switch (nuevaAccion) {
-                    case "1":
-                        //   this.apostar();
-                        break;
-                    case "2":
-                        this.agregarSaldo(jugador[0]);
-                        break;
-                    case "3":
-                        this.verInstrucciones();
-                        break;
-                    case "4":
-                        this.retirarSaldo(jugador[0]);
-                        console.log("\nGracias por jugar.");
-                        jugando = false;
-                        return;
-                    default:
-                        console.error("\nOpcion no valida.");
-                        break;
-                }
-    
-                if (this.getSaldoDisponible() < this.getApuestaMin()) {
-                    if (!solicitarRecarga(this, jugador[0])) {
-                        this.retirarSaldo(jugador[0]);
-                        jugando = false;
-                    };
-    
-                }
+            switch (nuevaAccion) {
+                case "1":
+                    this.apostar();
+                    break;
+                case "2":
+                    this.agregarSaldo(jugador[0]);
+                    break;
+                case "3":
+                    this.verInstrucciones();
+                    break;
+                case "4":
+                    this.retirarSaldo(jugador[0]);
+                    console.log("\nGracias por jugar.");
+                    jugando = false;
+                    return;
+                default:
+                    console.error("\nOpcion no valida.");
+                    break;
+            }
+
+            if (this.getSaldoDisponible() < this.getApuestaMin()) {
+                if (!solicitarRecarga(this, jugador[0])) {
+                    this.retirarSaldo(jugador[0]);
+                    jugando = false;
+                };
+
+            }
 
             let jugadorMano: Carta[] = [];
             let crupierMano: Carta[] = [];
