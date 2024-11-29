@@ -7,6 +7,10 @@ export class Mazo  {
         this.crearMazo();
     }
 
+    getMazo(): Carta[] {
+        return this.mazo;
+    }
+
     crearMazo() {
         const palo: Palo[] = ["♥️","♦️","♣️","♠️"];
         let i: number = 0;
