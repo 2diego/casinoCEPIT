@@ -37,22 +37,12 @@ export class Carta {
       } 
   }
 
-  calcularValor(juego: Juego): number {
-      let valorSinSimbolo: string = this.cartaMostrada.substring(0, this.cartaMostrada.length - 1);
+  calcularValor(): number {
+      let valorSinSimbolo: string = this.cartaMostrada.slice(0, 1);
       if (valorSinSimbolo === "A") {
-        switch (juego.getNombre()) {
-          case "Blackjack":
-            return 11;
-          case "Bacara":
-            return 1;
-          }
+        return 11;
         } else if (valorSinSimbolo === "J" || valorSinSimbolo === "Q" || valorSinSimbolo === "K") {
-            switch (juego.getNombre()) {
-              case "Blackjack":
-                return 10;
-              case "Bacara":
-                return 0;
-              }
+            return 10;
           }
       return parseInt(valorSinSimbolo);
     }

@@ -13,6 +13,7 @@ export class Bacara implements Juego {
     private apuestaMin: number;
     private apuestaMax: number;
     private apuestaActual: number = 0;
+    //private tipoApuesta: number[];
 
     constructor(nombre: string, apuestaMin: number = 0, apuestaMax: number = 0) {
         this.nombre = nombre;
@@ -137,9 +138,10 @@ export class Bacara implements Juego {
     juego(): void {
         //logica
         // se puede apostar al jugador, a la banca, empate y tambien se puede apostar un poco al jugador y a la banca a la vez
-        // let jugador = rls.questionInt('\nIngrese la apuesta del jugador: ');
-        // let banca = rls.questionInt('\nIngrese la apuesta de la banca: ');
-        // let empate = rls.questionInt('\nIngrese la apuesta del empate: ');
+        // while seleccionandoApuesta 
+        //this.tipoApuesta = rls.questionInt('\nSeleccion la apuesta: 1-Jugador, 2-Banca, 3-Empate');\
+        // switch (tipoApuesta) {
+        //seleccionandoApuesta = false
 
         // se reparten 2 cartas intercaladas al jugador y a la banca, dependiendo de la suma de las cartas pueden pedir una tercera carta
         // si la suma de las cartas es 8 o 9 no pueden perdir una tercera carta
