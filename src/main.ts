@@ -36,12 +36,21 @@ function main(){
   const bacara = GameFactory.crearJuego({
     tipo: "bacara",
     nombre: "Bacara",
-    cartas: ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"],
     apuestaMin: 50,
     apuestaMax: 200,
   });
   if (bacara) {
     casino.ingresarJuego(bacara);
+  }
+
+  const blackjack = GameFactory.crearJuego({
+    tipo: "blackjack",
+    nombre: "Blackjack",
+    apuestaMin: 50,
+    apuestaMax: 200,
+  });
+  if (blackjack) {
+    casino.ingresarJuego(blackjack);
   }
 
   

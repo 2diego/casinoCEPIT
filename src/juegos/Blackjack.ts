@@ -204,8 +204,8 @@ export class Blackjack implements Juego {
             let puntajeJugador: number = 0;
             let puntajeCrupier: number = 0;
 
-            puntajeJugador = jugadorMano[0].calcularValor(this) + jugadorMano[1].calcularValor(this);
-            puntajeCrupier = crupierMano[0].calcularValor(this);
+            puntajeJugador = jugadorMano[0].calcularValor() + jugadorMano[1].calcularValor();
+            puntajeCrupier = crupierMano[0].calcularValor();
 
             let jugadorSePlanta: boolean = false;
             let JugadorBlackjack: boolean = false;
@@ -229,7 +229,7 @@ export class Blackjack implements Juego {
                     while (respuesta.toLocaleLowerCase() === "s") {            // Jugador pide carta y bucle hasta que pierda o se plante
                         let carta: Carta = this.mazo.repartirCarta();
                         jugadorMano.push(carta);
-                        puntajeJugador += jugadorMano[jugadorMano.length - 1].calcularValor(this);
+                        puntajeJugador += jugadorMano[jugadorMano.length - 1].calcularValor();
                         console.log(carta.getCartaMostrada());
                         if (puntajeJugador > 21) {
                             if (jugadorMano[0].getCartaMostrada() === "A") {           // Si el jugador tiene un as y su puntaje es mayor a 21
@@ -257,7 +257,7 @@ export class Blackjack implements Juego {
 
             if (jugadorSePlanta) {                                  // Jugador planta y prosigue el turno del Crupier
                 console.log(`\nLa carta del Crupier es: ${crupierMano[1].getCartaMostrada()}`);            // Mostrar segunda carta del Crupier
-                puntajeCrupier += crupierMano[1].calcularValor(this);
+                puntajeCrupier += crupierMano[1].calcularValor();
                 console.log(`\nEl Crupier tiene un puntaje de: ${puntajeCrupier}`);
                 if (puntajeCrupier === 21) {                        // Crupier tiene blackjack
                     console.log(`\nEl Crupier tiene un blackjack`);
@@ -267,7 +267,7 @@ export class Blackjack implements Juego {
                     while (puntajeCrupier < 17) {                      // Crupier pide carta
                         let carta: Carta = this.mazo.repartirCarta();
                         crupierMano.push(carta);
-                        puntajeCrupier += crupierMano[crupierMano.length - 1].calcularValor(this);
+                        puntajeCrupier += crupierMano[crupierMano.length - 1].calcularValor();
                         if (puntajeCrupier > 21) {                                            // Si el Crupier tiene un as y su puntaje es mayor a 21
                             if (crupierMano[0].getCartaMostrada() === "A") {
                                 puntajeCrupier -= 10;

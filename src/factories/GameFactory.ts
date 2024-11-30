@@ -2,6 +2,7 @@ import { TragamonedasClasico } from "../juegos/TragamonedasClasico";
 import { TragamonedasBonus } from "../juegos/TragamonedasBonus";
 import { Bacara } from "../juegos/Bacara";
 import { Juego } from "../models/Juego";
+import { Blackjack } from "../juegos/Blackjack";
 
 interface DetallesTragamonedasClasico  {
   tipo: "tragamonedas-clasico",
@@ -19,21 +20,20 @@ interface DetallesTragamonedasBonus {
   apuestaMax: number
 }
 
-/*interface DetallesBlackjack {
+interface DetallesBlackjack {
   tipo: "blackjack",
-  name: string,
+  nombre: string,
   apuestaMin: number,
   apuestaMax: number
 }
-*/
+
 interface DetallesBacara {
   tipo: "bacara",
   nombre: string,
-  cartas: string[],
   apuestaMin: number,
   apuestaMax: number
 }
-type DetallesJuego = DetallesTragamonedasClasico | DetallesTragamonedasBonus | DetallesBacara; // | DetallesBlackjack
+type DetallesJuego = DetallesTragamonedasClasico | DetallesTragamonedasBonus | DetallesBacara | DetallesBlackjack;
 
 export class GameFactory {
   public static crearJuego(detalles: DetallesJuego): Juego | null {
@@ -42,8 +42,8 @@ export class GameFactory {
         return new TragamonedasClasico(detalles.nombre, detalles.simbolos, detalles.apuestaMin, detalles.apuestaMax);
       case "tragamonedas-bonus":
         return new TragamonedasBonus(detalles.nombre, detalles.simbolos, detalles.apuestaMin, detalles.apuestaMax) as TragamonedasBonus;
-      /*case "blackjack":*/
-      /*  return new Blackjack(detalles.name, detalles.apuestaMin, detalles.apuestaMax);*/
+      case "blackjack":
+       return new Blackjack(detalles.nombre, detalles.apuestaMin, detalles.apuestaMax);
       case "bacara":
         return new Bacara(detalles.nombre, detalles.apuestaMin, detalles.apuestaMax);
       default:
