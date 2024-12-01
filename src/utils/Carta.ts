@@ -38,7 +38,7 @@ export class Carta {
   }
 
   calcularValor(): number {
-      let valorSinSimbolo: string = this.cartaMostrada.slice(0, 1);
+      let valorSinSimbolo: string = this.cartaMostrada.replace(/[^\dA-Z]/g, ""); 
       if (valorSinSimbolo === "A") {
         return 11;
         } else if (valorSinSimbolo === "J" || valorSinSimbolo === "Q" || valorSinSimbolo === "K") {

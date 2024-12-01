@@ -5,6 +5,7 @@ export class Mazo  {
     constructor() { 
         this.mazo = [];
         this.crearMazo();
+        this.mezclarMazo();
     }
 
     getMazo(): Carta[] {
