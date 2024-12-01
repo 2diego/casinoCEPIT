@@ -31,18 +31,17 @@ export class Blackjack extends JuegoDeCartas {
       }
 
       jugadorMano.forEach((carta) =>
-        console.log("Su carta es:" + carta.getCartaMostrada())
+        console.log("Su carta es: " + carta.getCartaMostrada())
       );
       console.log(
-        "La primera carta del Crupier es:" + crupierMano[0].getCartaMostrada()
+        "La primera carta del Crupier es: " + crupierMano[0].getCartaMostrada()
       );
       console.log(`\nCarta oculta del Crupier`);
 
       let puntajeJugador: number = 0;
       let puntajeCrupier: number = 0;
 
-      puntajeJugador =
-        jugadorMano[0].calcularValor() + jugadorMano[1].calcularValor();
+      puntajeJugador = jugadorMano[0].calcularValor() + jugadorMano[1].calcularValor();
       puntajeCrupier = crupierMano[0].calcularValor();
 
       let jugadorSePlanta: boolean = false;
