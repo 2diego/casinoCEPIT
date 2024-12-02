@@ -89,10 +89,10 @@ Su eleccion: `);
         puntajeJugador = jugadorMano[0].calcularValor() + jugadorMano[1].calcularValor();
         puntajeCrupier = crupierMano[0].calcularValor() + crupierMano[1].calcularValor();
 
-        if (puntajeJugador > 9) {
+        while (puntajeJugador > 9) {
           puntajeJugador -= 10;
         }
-        if (puntajeCrupier > 9) {
+        while (puntajeCrupier > 9) {
           puntajeCrupier -= 10;
         }
 
@@ -144,7 +144,7 @@ Su eleccion: `);
           console.log(`\nLa tercera carta es: ${terceraCarta.getCartaMostrada()}`);
           jugadorMano.push(terceraCarta);
           puntajeJugador += terceraCarta.calcularValor();
-          if (puntajeJugador >= 10) {
+          while (puntajeJugador > 9) {
             puntajeJugador -= 10;
           }
           console.log(`\nLa suma de las cartas del jugador es: ${puntajeJugador}`);
@@ -159,7 +159,7 @@ Su eleccion: `);
             console.log(`\nLa tercera carta de la banca es: ${terceraCartaCrupier.getCartaMostrada()}`);
             crupierMano.push(terceraCartaCrupier);
             puntajeCrupier += terceraCartaCrupier.calcularValor();
-            if (puntajeCrupier >= 10) {
+            while (puntajeCrupier > 9) {
               puntajeCrupier -= 10;
             }
           } else if (puntajeCrupier === 3 && jugadorMano.length === 3 && jugadorMano[2].calcularValor() !== 8) { //crupier tiene 3 y jugador con tres cartas y la tercera no es 8
@@ -169,7 +169,7 @@ Su eleccion: `);
               console.log(`\nLa tercera carta de la banca es: ${terceraCartaCrupier.getCartaMostrada()}`);
               crupierMano.push(terceraCartaCrupier);
               puntajeCrupier += terceraCartaCrupier.calcularValor();
-              if (puntajeCrupier >= 10) {
+              while (puntajeCrupier > 9) {
                 puntajeCrupier -= 10;
               }
             } else if (puntajeCrupier === 4 && jugadorMano.length === 3 && [2, 3, 4, 5, 6, 7].includes(jugadorMano[2].calcularValor())) {//crupier tiene 4 y jugador con tres cartas y la tercera esta entre 2 y 7
@@ -179,7 +179,7 @@ Su eleccion: `);
                 console.log(`\nLa tercera carta de la banca es: ${terceraCartaCrupier.getCartaMostrada()}`);
                 crupierMano.push(terceraCartaCrupier);
                 puntajeCrupier += terceraCartaCrupier.calcularValor();
-                if (puntajeCrupier >= 10) {
+                while (puntajeCrupier > 9) {
                   puntajeCrupier -= 10;
                 }
               } else if (puntajeCrupier === 5 && jugadorMano.length === 3 && [4, 5, 6, 7].includes(jugadorMano[2].calcularValor())) {//crupier tiene 5 y jugador con tres cartas y la tercera esta entre 4 y 7
@@ -189,7 +189,7 @@ Su eleccion: `);
                   console.log(`\nLa tercera carta de la banca es: ${terceraCartaCrupier.getCartaMostrada()}`);
                   crupierMano.push(terceraCartaCrupier);
                   puntajeCrupier += terceraCartaCrupier.calcularValor();
-                  if (puntajeCrupier >= 10) {
+                  while (puntajeCrupier > 9) {
                     puntajeCrupier -= 10;
                   }
                 } else if (puntajeCrupier === 6 && jugadorMano.length === 3 && [6, 7].includes(jugadorMano[2].calcularValor())) {//crupier tiene 6 y jugador con tres cartas y la tercera es 6 o 7
@@ -199,7 +199,7 @@ Su eleccion: `);
                     console.log(`\nLa tercera carta de la banca es: ${terceraCartaCrupier.getCartaMostrada()}`);
                     crupierMano.push(terceraCartaCrupier);
                     puntajeCrupier += terceraCartaCrupier.calcularValor();
-                    if (puntajeCrupier >= 10) {
+                    while (puntajeCrupier > 9) {
                       puntajeCrupier -= 10;
                     }
                   } else {//crupier tiene 7 o menos pero no puede pedir la tercera carta
