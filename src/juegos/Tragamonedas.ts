@@ -154,19 +154,19 @@ export abstract class Tragamonedas implements Juego {
       return false;
     }
     if (this.getApuestaMin() > 0 && monto < this.getApuestaMin()) {
-      console.error("\nLa apuesta debe ser mayor a la apuesta minima.");
+      console.error(`\nLa apuesta debe ser mayor a $${this.getApuestaMin()}.`);
       return false;
     }
     if (this.getApuestaMax() > 0 && monto > this.getApuestaMax()) {
-      console.error("\nLa apuesta debe ser menor a la apuesta maxima.");
+      console.error(`\nLa apuesta debe ser menor a $${this.getApuestaMax()}.`);
       return false;
     }
-    return true
+    return true;
   }
 
-  abstract jugar(jugador: Jugador[]): void;
+  abstract jugar(jugadores: Jugador[]): void;
 
-  public abstract apostar(lineasApostadas: number, inBonus: boolean): void;
+  public abstract apostar(inBonus: boolean): void;
  
   protected abstract calcularPremio(lineasApostadas: number): void;
 }

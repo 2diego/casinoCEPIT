@@ -1,217 +1,236 @@
-import { Juego } from "../models/Juego";
-import { Jugador } from "../models/Jugador";
-import { Mazo } from "../utils/Mazo";
+import { JuegoDeCartas } from "./JuegoDeCartas";
 import { Carta } from "../utils/Carta";
-import { solicitarApuesta, solicitarRecarga, solicitarSaldo, validarSaldoInicial, verInstrucciones } from "../utils/utils";
-import fs from 'fs';
-import * as readline from 'readline-sync';
+import { Mazo } from "../utils/Mazo";
+import { juegaDeNuevo } from "../utils/utils";
+import * as readlineSync from "readline-sync";
 
-export class Bacara implements Juego {
-    private nombre: string;
-    private saldoDisponible: number;
-    private cartas: Mazo;
-    private apuestaMin: number;
-    private apuestaMax: number;
-    private apuestaActual: number = 0;
-    //private tipoApuesta: number[];
+export class Bacara extends JuegoDeCartas {
+  private tipoApuesta: string = "";
 
-    constructor(nombre: string, apuestaMin: number = 0, apuestaMax: number = 0) {
-        this.nombre = nombre;
-        this.saldoDisponible = 0;
-        this.cartas = new Mazo;
-        if (apuestaMin < 0 || apuestaMax < 0) {
-            console.error("Las apuestas minima y maxima no pueden ser negativas.");
-        }
-        if (apuestaMax > 0 && apuestaMin > apuestaMax) {
-            console.error("La apuesta minima no puede ser mayor que la apuesta maxima.");
-        }
-        this.apuestaMin = apuestaMin;//probar validaciones en constructor
-        this.apuestaMax = apuestaMax;
+  public calcularPremio(resultado: "jugador" | "banca" | "empate"): void {
+    let premio: number = 0;
+    if (resultado === "jugador") {
+      if (this.tipoApuesta.includes("jugador")) {
+        premio = this.getApuestaActual() * 2;
+        console.log(`\nEl jugador gana $${premio} por haber apostado al ${resultado}.`);
+        this.ingresarSaldo(premio);
+      }
+    } else if (resultado === "banca") {
+      if (this.tipoApuesta.includes("banca")) {
+        premio = this.getApuestaActual() * 2;
+        console.log(`\nEl jugador gana $${premio} por haber apostado a la ${resultado}.`);
+        this.ingresarSaldo(premio);
+      }
+    } else if (resultado === "empate") {
+      if (this.tipoApuesta.includes("empate")) {
+        premio = this.getApuestaActual() * 2;
+        console.log(`\nEl jugador gana $${premio} por haber apostado al ${resultado}.`);
+        this.ingresarSaldo(premio);
+      }
     }
-
-    getNombre(): string {
-        return this.nombre;
+    if (premio === 0) {
+      console.log(`\nNo hubo apuestas ganadoras.`);
     }
+  }
 
-    getSaldoDisponible(): number {
-        return this.saldoDisponible;
-    }
+  public mostrarMano(mano: Carta[], turno: "jugador" | "croupier"): void {
+    let enMano: string = mano.map((carta) => carta.getCartaMostrada()).join(" | ");
 
-    getApuestaMin(): number {
-        return this.apuestaMin;
-    }
+    console.log(`\nMano del ${turno}: | ${enMano} |`);
+  }
 
-    getApuestaMax(): number {
-        return this.apuestaMax;
-    }
+  public juego(): void {
 
-    getCartas(): Mazo {
-        return this.cartas;
-    }
+    let enJuego: boolean = true;
+    let jugandoMano: boolean = true;
 
-    getApuestaActual(): number {
-        return this.apuestaActual;
-    }
+    while (enJuego) {
 
-    setApuestaActual(apuesta: number): void {
-        this.apuestaActual = apuesta;
-    }
+      while (jugandoMano) {
+    
+        let elegirApuesta: number = readlineSync.questionInt(`\nSeleccion una apuesta:
+          1-Jugador
+          2-Banca
+          3-Empate
+Su eleccion: `);
 
-    setSaldoDisponible(saldo: number): void {
-        this.saldoDisponible = saldo;
-    }
-
-    public ingresarSaldo(saldo: number): void {
-        if (saldo < 0) {
-            console.error("\nEl saldo ingresado no puede ser negativo.");
-        }
-        this.saldoDisponible += saldo;
-    }
-
-    public agregarSaldo(jugador: Jugador): number { //Si el manejo de saldo es igual para todos los juegos
-        const saldo: number = solicitarSaldo();     //hacer una clase SaldoDisponible como si fuera un repository
-        if (jugador.cargarJuego(saldo)) {           //para manejar la logica de saldo
-            this.ingresarSaldo(saldo);
-            console.log(`\nSe ingreso $${saldo} al juego.`);
-        }
-        return saldo;
-    }
-
-    public retirarSaldo(jugador: Jugador): number {
-        const saldoRetirar = this.saldoDisponible;
-        this.saldoDisponible = 0;
-        jugador.sumarGanancia(saldoRetirar);
-        console.log(`\nHas retirado: $${saldoRetirar}`);
-        return saldoRetirar;
-    }
-
-    protected setSaldoInicial(jugador: Jugador): void {
-        let saldoInicial: number = validarSaldoInicial(this.getApuestaMin());
-        if (saldoInicial === 0) {
-            return;
+        while (elegirApuesta < 1 || elegirApuesta > 3) {
+          console.log("\nEl numero ingresado debe ser entre 1 y 3, intente nuevamente.");
+          elegirApuesta = readlineSync.questionInt(`\nSeleccion una apuesta:
+            1-Jugador
+            2-Banca
+            3-Empate
+Su eleccion: `);
         }
 
-        let cargar: boolean = jugador.cargarJuego(saldoInicial);
-        if (!cargar) {
-            console.log(`\nNo cuenta con saldo suficiente para jugar ${this.getNombre()}.`);
-            return;
+        switch (elegirApuesta) {
+          case 1:
+            this.tipoApuesta = "jugador";
+            break;
+          case 2:
+            this.tipoApuesta = "banca";
+            break;
+          case 3:
+            this.tipoApuesta = "empate";
+            break;
         }
 
-        this.ingresarSaldo(saldoInicial);
-    }
+        let jugadorMano: Carta[] = [];
+        let crupierMano: Carta[] = [];
 
-    public validarApuesta(monto: number): boolean { //validarApuesta iria en utils?
-        if (monto <= 0) {
-            console.error("\nLa apuesta debe ser mayor a 0.");
-            return false;
-        }
-        if (this.getSaldoDisponible() < monto) {
-            console.error("\nNo cuenta con saldo suficiente para apostar.");
-            return false;
-        }
-        if (this.getApuestaMin() > 0 && monto < this.getApuestaMin()) {
-            console.error("\nLa apuesta debe ser mayor a la apuesta minima.");
-            return false;
-        }
-        if (this.getApuestaMax() > 0 && monto > this.getApuestaMax()) {
-            console.error("\nLa apuesta debe ser menor a la apuesta maxima.");
-            return false;
-        }
-        return true
-    }
-
-
-    apostar(): void {
-        let apuesta = solicitarApuesta(this, this.getApuestaMin(), this.getApuestaMax());
-        if (apuesta !== this.getApuestaMin() && apuesta !== this.getApuestaMax()) {
-            console.error(`\nLa apuesta debe ser $${this.getApuestaMin()} o $${this.getApuestaMax()}.`);
-        } else if (this.validarApuesta(apuesta)) {
-            console.log(`\nApostaste $${apuesta}.`);
-            this.setSaldoDisponible(this.getSaldoDisponible() - apuesta);
-            this.setApuestaActual(apuesta);
-            // calcularPremio();
-        }
-    }
-    getValorNumerico(): void {
-      
-    }
-    juego(): void {
-        //logica
-        // se puede apostar al jugador, a la banca, empate y tambien se puede apostar un poco al jugador y a la banca a la vez
-        // while seleccionandoApuesta 
-        //this.tipoApuesta = rls.questionInt('\nSeleccion la apuesta: 1-Jugador, 2-Banca, 3-Empate');\
-        // switch (tipoApuesta) {
-        //seleccionandoApuesta = false
-
-        // se reparten 2 cartas intercaladas al jugador y a la banca, dependiendo de la suma de las cartas pueden pedir una tercera carta
-        // si la suma de las cartas es 8 o 9 no pueden perdir una tercera carta
-
-        // gana el que mas cerca del 9 este
-
-        // si la suma de las cartas es 10 el total es 0 -> if suma > 9 => suma - 10
-        // si la suma de las cartas es 11 el total es 1
-        // si la suma de las cartas es 12 el total es 2
-        // si la suma de las cartas es 13 el total es 3
-        // si la suma de las cartas es 14 el total es 4
-        // si la suma de las cartas es 15 el total es 5
-        // si la suma de las cartas es 16 el total es 6
-        // si la suma de las cartas es 17 el total es 7
-        // si la suma de las cartas es 18 el total es 8
-        // si la suma de las cartas es 19 el total es 9
-
-
-    }
-    calcularPremio(): void {
-
-    }
-
-
-    public jugar(jugador: Jugador[]): void {
-
-        //logica de elegir jugador en utils
-        console.log(`\n---------- Bienvenido a ${this.getNombre()} ----------`);
-        this.setSaldoInicial(jugador[0]);
-        if (this.getSaldoDisponible() === 0) {
-            return;
+        for (let i = 0; i < 2; i++) {
+          jugadorMano.push(this.getMazo().repartirCarta());
+          crupierMano.push(this.getMazo().repartirCarta());
         }
 
-        let jugando: boolean = true; //menu utils no sirve para iniciar?
-        while (jugando) { // Desp un loop de mano/turno con otro menu con pedir carta, plantarse..
-            let nuevaAccion = readline.question(`\nseleccione que desea hacer: 
-            1 - Apostar
-            2 - Ingresar saldo
-            3 - Ver instrucciones
-            4 - Retirar saldo y salir
-          \nSu eleccion `);
-            switch (nuevaAccion) {
-                case "1":
-                    //   this.apostar();
-                    break;
-                case "2":
-                    this.agregarSaldo(jugador[0]);
-                    break;
-                case "3":
-                    verInstrucciones(this);
-                    break;
-                case "4":
-                    this.retirarSaldo(jugador[0]);
-                    console.log("\nGracias por jugar.");
-                    jugando = false;
-                    return;
-                default:
-                    console.error("\nOpcion no valida.");
-                    break;
+        let puntajeJugador: number = 0;
+        let puntajeCrupier: number = 0;
+
+        puntajeJugador = jugadorMano[0].calcularValor() + jugadorMano[1].calcularValor();
+        puntajeCrupier = crupierMano[0].calcularValor() + crupierMano[1].calcularValor();
+
+        if (puntajeJugador > 9) {
+          puntajeJugador -= 10;
+        }
+        if (puntajeCrupier > 9) {
+          puntajeCrupier -= 10;
+        }
+
+        this.mostrarMano(jugadorMano, "jugador");
+
+        console.log(`La suma de las cartas del jugador es: ${puntajeJugador}`);
+
+        if ((puntajeJugador) === 8 || puntajeJugador === 9) {//jugador mano natural
+          console.log(`\nEl jugador tiene una mano natural! No se reparten mas cartas.`);
+          this.mostrarMano(crupierMano, "croupier");
+          console.log(`La suma de las cartas de la banca es: ${puntajeCrupier}`);
+          if (puntajeJugador === puntajeCrupier) {
+            console.log(`\nEmpate! El jugador y la banca tienen ${puntajeJugador} natural.`);
+            this.calcularPremio("empate");
+            jugandoMano = false;
+            continue;
+          } else if (puntajeJugador === 8 && puntajeCrupier === 9) {
+              console.log(`\nGana la banca!`);
+              this.calcularPremio("banca");
+              jugandoMano = false;
+              continue;
+            } else {
+                console.log(`\nGana el jugador!`);
+                this.calcularPremio("jugador");
+                jugandoMano = false;
+                continue;
+              }
+        }
+
+        if (puntajeCrupier === 8 || puntajeCrupier === 9) { //crupier mano natural
+          console.log(`\nLa banca tiene una mano natural! No se reparten mas cartas.`);
+          this.mostrarMano(crupierMano, "croupier");
+          console.log(`\nLa suma de las cartas de la banca es: ${puntajeCrupier}`);
+          this.mostrarMano(jugadorMano, "jugador");
+          console.log(`\nLa suma de las cartas del jugador es: ${puntajeJugador}`);
+          console.log(`\nGana la banca!`);
+          this.calcularPremio("banca");
+          jugandoMano = false;
+          continue;
+        }
+
+        if (puntajeJugador === 6 || puntajeJugador === 7) { //jugador mano 6 o 7 se planta
+          console.log(`\nCon 6 o 7 debe plantarse, no puede pedir la tercera carta.`);
+        }
+
+        if (puntajeJugador < 6) { //jugador menos de 6 tercera carta
+          console.log(`\nEl jugador suma menos de 6, debe pedir la tercera carta.`);
+          let terceraCarta: Carta = this.getMazo().repartirCarta();
+          console.log(`\nLa tercera carta es: ${terceraCarta.getCartaMostrada()}`);
+          jugadorMano.push(terceraCarta);
+          puntajeJugador += terceraCarta.calcularValor();
+          if (puntajeJugador >= 10) {
+            puntajeJugador -= 10;
+          }
+          console.log(`\nLa suma de las cartas del jugador es: ${puntajeJugador}`);
+        }
+        
+        //reglas tercera carta crupier
+        if (puntajeCrupier < 7) { //crupier menos de 7 tercera carta
+          if (puntajeCrupier <= 2) { //crupier menos de 3 pide tercera
+            this.mostrarMano(crupierMano, "croupier");
+            console.log(`\nLa banca tiene ${puntajeCrupier} y debe tomar una tercera carta.`);
+            const terceraCartaCrupier: Carta = this.getMazo().repartirCarta();
+            console.log(`\nLa tercera carta de la banca es: ${terceraCartaCrupier.getCartaMostrada()}`);
+            crupierMano.push(terceraCartaCrupier);
+            puntajeCrupier += terceraCartaCrupier.calcularValor();
+            if (puntajeCrupier >= 10) {
+              puntajeCrupier -= 10;
             }
-
-            if (this.getSaldoDisponible() < this.getApuestaMin()) {
-                if (!solicitarRecarga(this, jugador[0])) {
-                    this.retirarSaldo(jugador[0]);
-                    jugando = false;
-                };
-
-            }
+          } else if (puntajeCrupier === 3 && jugadorMano.length === 3 && jugadorMano[2].calcularValor() !== 8) { //crupier tiene 3 y jugador con tres cartas y la tercera no es 8
+              this.mostrarMano(crupierMano, "croupier");
+              console.log(`\nLa banca tiene 3 y debe tomar una tercera carta porque la tercera carta del jugador no es un 8.`);
+              const terceraCartaCrupier: Carta = this.getMazo().repartirCarta();
+              console.log(`\nLa tercera carta de la banca es: ${terceraCartaCrupier.getCartaMostrada()}`);
+              crupierMano.push(terceraCartaCrupier);
+              puntajeCrupier += terceraCartaCrupier.calcularValor();
+              if (puntajeCrupier >= 10) {
+                puntajeCrupier -= 10;
+              }
+            } else if (puntajeCrupier === 4 && jugadorMano.length === 3 && [2, 3, 4, 5, 6, 7].includes(jugadorMano[2].calcularValor())) {//crupier tiene 4 y jugador con tres cartas y la tercera esta entre 2 y 7
+                this.mostrarMano(crupierMano, "croupier");
+                console.log(`\nLa banca tiene 4 y debe tomar una tercera carta porque la tercera carta del jugador está entre 2 y 7.`);
+                const terceraCartaCrupier: Carta = this.getMazo().repartirCarta();
+                console.log(`\nLa tercera carta de la banca es: ${terceraCartaCrupier.getCartaMostrada()}`);
+                crupierMano.push(terceraCartaCrupier);
+                puntajeCrupier += terceraCartaCrupier.calcularValor();
+                if (puntajeCrupier >= 10) {
+                  puntajeCrupier -= 10;
+                }
+              } else if (puntajeCrupier === 5 && jugadorMano.length === 3 && [4, 5, 6, 7].includes(jugadorMano[2].calcularValor())) {//crupier tiene 5 y jugador con tres cartas y la tercera esta entre 4 y 7
+                  this.mostrarMano(crupierMano, "croupier");
+                  console.log(`\nLa banca tiene 5 y debe tomar una tercera carta porque la tercera carta del jugador está entre 4 y 7.`);
+                  const terceraCartaCrupier: Carta = this.getMazo().repartirCarta();
+                  console.log(`\nLa tercera carta de la banca es: ${terceraCartaCrupier.getCartaMostrada()}`);
+                  crupierMano.push(terceraCartaCrupier);
+                  puntajeCrupier += terceraCartaCrupier.calcularValor();
+                  if (puntajeCrupier >= 10) {
+                    puntajeCrupier -= 10;
+                  }
+                } else if (puntajeCrupier === 6 && jugadorMano.length === 3 && [6, 7].includes(jugadorMano[2].calcularValor())) {//crupier tiene 6 y jugador con tres cartas y la tercera es 6 o 7
+                    this.mostrarMano(crupierMano, "croupier");
+                    console.log(`\nLa banca tiene 6 y debe tomar una tercera carta porque la tercera carta del jugador es 6 o 7.`);
+                    const terceraCartaCrupier: Carta = this.getMazo().repartirCarta();
+                    console.log(`\nLa tercera carta de la banca es: ${terceraCartaCrupier.getCartaMostrada()}`);
+                    crupierMano.push(terceraCartaCrupier);
+                    puntajeCrupier += terceraCartaCrupier.calcularValor();
+                    if (puntajeCrupier >= 10) {
+                      puntajeCrupier -= 10;
+                    }
+                  } else {//crupier tiene 7 o menos pero no puede pedir la tercera carta
+                      this.mostrarMano(crupierMano, "croupier");
+                      console.log(`\nLa banca debe plantarse con un puntaje de ${puntajeCrupier}.`);
+                  }
         }
-        return;
+        
+        console.log(`\nPuntaje final del jugador: ${puntajeJugador}`);
+        console.log(`Puntaje final de la banca: ${puntajeCrupier}`);
+        
+        if (puntajeJugador > puntajeCrupier) {
+          console.log(`\nEl jugador gana con ${puntajeJugador} contra ${puntajeCrupier}.`);
+          this.calcularPremio("jugador");
+        } else if (puntajeCrupier > puntajeJugador) {
+          console.log(`\nLa banca gana con ${puntajeCrupier} contra ${puntajeJugador}.`);
+          this.calcularPremio("banca");
+        } else {
+          console.log(`\nEmpate! Ambos tienen ${puntajeJugador}.`);
+          this.calcularPremio("empate");
+        }
+        
+        jugandoMano = false;
+      }
+
+      let respuesta: string = juegaDeNuevo();
+      if (respuesta.toLowerCase() === "n") {
+        enJuego = false;
+      }
+      this.setMazo(new Mazo());
     }
+  }
 
 }

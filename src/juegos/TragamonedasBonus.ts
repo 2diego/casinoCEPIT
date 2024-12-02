@@ -1,12 +1,20 @@
 import { Bonus } from "../bonus/Bonus";
 import { Tragamonedas } from "./Tragamonedas";
 import { Jugador } from "../models/Jugador";
-import { elegirJugador, solicitarRecarga, menuJuegos, solicitarApuesta, solicitarLineas, confirmarApuesta, verInstrucciones } from "../utils/utils";
+import {
+  elegirJugador,
+  solicitarRecarga,
+  menuJuegos,
+  solicitarApuesta,
+  solicitarLineas,
+  confirmarApuesta,
+  verInstrucciones,
+} from "../utils/utils";
 import { lineasPosibles } from "../utils/lineas";
 
 export class TragamonedasBonus extends Tragamonedas {
   private bonus: Bonus[] = [];
-  
+
   public agregarBonus(bonus: Bonus): void {
     this.bonus.push(bonus);
   }
@@ -15,34 +23,50 @@ export class TragamonedasBonus extends Tragamonedas {
     return this.bonus.find((bonus) => bonus.getIconoGanador() === iconoGanador);
   }
 
-  public apostar(lineasApostadas: number, inBonus: boolean = false): void {
+  public apostar(inBonus: boolean = false): void {
+    this.setApuestaActual(
+      solicitarApuesta(this, this.getApuestaMin(), this.getApuestaMax())
+    );
+    let lineasApostadas: number = solicitarLineas();
+    let totalApostado: number = this.getApuestaActual() * lineasApostadas;
+    if (this.validarApuesta(totalApostado)) {
+      if (confirmarApuesta(this.getApuestaActual(), lineasApostadas)) {
+        this.setSaldoDisponible(this.getSaldoDisponible() - totalApostado);
+      }
+    }
     this.girar();
     this.mostrarResultado();
     this.calcularPremio(lineasApostadas, inBonus);
   }
 
-  protected calcularPremio(lineasApostadas: number, inBonus: boolean = false): void {
+  protected calcularPremio(
+    lineasApostadas: number,
+    inBonus: boolean = false
+  ): void {
     let premio: number = 0;
     let lineas: number[][][] = lineasPosibles[lineasApostadas];
-    let bonusPorActivar: Bonus[] = []
+    let bonusPorActivar: Bonus[] = [];
 
-    for (let i = 0; i < lineasApostadas; i++) { //for (let linea of lineas) {
-      let simbolos: string[] = lineas[i].map(([fila, columna]) => this.getResultadoActual()[fila][columna]);
+    for (let i = 0; i < lineasApostadas; i++) {
+      //for (let linea of lineas) {
+      let simbolos: string[] = lineas[i].map(
+        ([fila, columna]) => this.getResultadoActual()[fila][columna]
+      );
 
       if (simbolos.every((simbolo) => simbolo === simbolos[0])) {
         let multiplicador: number = this.getSimbolos().indexOf(simbolos[0]) + 2;
         let premioPorLinea: number = this.getApuestaActual() * multiplicador;
-        
+
         console.log(`\nGanaste con tres ${simbolos[0]}!
 Premio por linea: $${premioPorLinea}`);
         this.ingresarSaldo(premioPorLinea);
         premio += premioPorLinea;
-          
+
         if (!inBonus) {
-        const bonus: Bonus | undefined = this.checkBonus(simbolos[0]);
+          const bonus: Bonus | undefined = this.checkBonus(simbolos[0]);
           if (bonus) {
             bonusPorActivar.push(bonus);
-            }
+          }
         }
       }
     }
@@ -77,15 +101,7 @@ Premio por linea: $${premioPorLinea}`);
 
       switch (accion) {
         case 1:
-          this.setApuestaActual(solicitarApuesta(this, this.getApuestaMin(), this.getApuestaMax()));
-          let lineasApostadas: number = solicitarLineas();
-          let totalApostado: number = this.getApuestaActual() * lineasApostadas;
-          if (this.validarApuesta(totalApostado)) {
-            if (confirmarApuesta(this.getApuestaActual(), lineasApostadas)) {
-              this.setSaldoDisponible(this.getSaldoDisponible() - (totalApostado));
-              this.apostar(lineasApostadas);
-            }
-          }
+          this.apostar();
           break;
         case 2:
           this.agregarSaldo(jugador);
@@ -103,13 +119,12 @@ Premio por linea: $${premioPorLinea}`);
           break;
       }
       if (this.getSaldoDisponible() <= this.getApuestaMin()) {
-        if(!solicitarRecarga(this, jugador)){
+        if (!solicitarRecarga(this, jugador)) {
           this.retirarSaldo(jugador);
           jugando = false;
         }
-      };
+      }
     }
     return;
   }
-
 }

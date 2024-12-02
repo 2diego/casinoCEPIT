@@ -15,7 +15,7 @@ export class BonusGirosGratis implements Bonus {
     console.log(`\nSe activaron ${this.cantidadGirosGratis} giros gratis.`);
     for (let i = 0; i < this.cantidadGirosGratis; i++) {
       console.log(`\nGiro gratis N° ${i + 1}`);
-      juego.apostar(lineasApostadas, true);
+      juego.apostar(true);
     }
   }
 }

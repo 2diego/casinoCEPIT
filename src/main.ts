@@ -36,8 +36,8 @@ function main(){
   const bacara = GameFactory.crearJuego({
     tipo: "bacara",
     nombre: "Bacara",
-    apuestaMin: 50,
-    apuestaMax: 200,
+    apuestaMin: 100,
+    apuestaMax: 10000,
   });
   if (bacara) {
     casino.ingresarJuego(bacara);

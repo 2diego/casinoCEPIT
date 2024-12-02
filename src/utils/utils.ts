@@ -82,8 +82,8 @@ export function solicitarApuesta(juego: Juego, apuestaMin: number, apuestaMax: n
       return " por linea";
     } else if (juego.getNombre() === "Tragamonedas clasico") {
         return ` ($${apuestaMin} o $${apuestaMax})`;
-      } else if (juego.getNombre() === "Blackjack") {
-          return `entre $${juego.getApuestaMin()} y $${juego.getApuestaMax()}`;
+      } else if (juego.getNombre() === "Blackjack" || juego.getNombre() === "Bacara") {
+          return ` entre $${juego.getApuestaMin()} y $${juego.getApuestaMax()}`;
         }
       return "";
     }
