@@ -131,7 +131,7 @@ Su eleccion: `);
         if (puntajeJugador === 6 || puntajeJugador === 7) { //jugador mano 6 o 7 se planta
           console.log(`\nCon 6 o 7 debe plantarse, no puede pedir la tercera carta.`);
         }
-
+        
         if (puntajeJugador < 6) { //jugador menos de 6 tercera carta
           console.log(`\nEl jugador suma menos de 6, debe pedir la tercera carta.`);
           let terceraCarta: Carta = this.getMazo().repartirCarta();
@@ -142,6 +142,11 @@ Su eleccion: `);
             puntajeJugador -= 10;
           }
           console.log(`\nLa suma de las cartas del jugador es: ${puntajeJugador}`);
+        }
+        
+        if (puntajeCrupier === 7) { //crupier tiene 7 se planta
+          this.mostrarMano(crupierMano, "crupier");
+          console.log(`\nLa banca tiene 7 y debe plantarse.`);
         }
         
         //reglas tercera carta crupier
@@ -201,6 +206,7 @@ Su eleccion: `);
                       console.log(`\nLa banca debe plantarse con un puntaje de ${puntajeCrupier}.`);
                   }
         }
+
         
         console.log(`\nPuntaje final del jugador: ${puntajeJugador}`);
         console.log(`Puntaje final de la banca: ${puntajeCrupier}`);

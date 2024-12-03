@@ -23,7 +23,7 @@ function main(){
 
   const tragamonedasBonus  = GameFactory.crearJuego({
     tipo: "tragamonedas-bonus",
-    nombre: "Tragamonedas clasico con bonus",
+    nombre: "Tragamonedas bonus",
     simbolos: ["🍒", "💎", "🔥"],
     apuestaMin: 0,
     apuestaMax: 0,
