@@ -17,13 +17,13 @@ export class Bacara extends JuegoDeCartas {
       }
     } else if (resultado === "banca") {
       if (this.tipoApuesta.includes("banca")) {
-        premio = this.getApuestaActual() * 2;
+        premio = this.getApuestaActual() * 1.5;
         console.log(`\nEl jugador gana $${premio} por haber apostado a la ${resultado}.`);
         this.ingresarSaldo(premio);
       }
     } else if (resultado === "empate") {
       if (this.tipoApuesta.includes("empate")) {
-        premio = this.getApuestaActual() * 2;
+        premio = this.getApuestaActual() * 8;
         console.log(`\nEl jugador gana $${premio} por haber apostado al ${resultado}.`);
         this.ingresarSaldo(premio);
       }
@@ -31,12 +31,6 @@ export class Bacara extends JuegoDeCartas {
     if (premio === 0) {
       console.log(`\nNo hubo apuestas ganadoras.`);
     }
-  }
-
-  public mostrarMano(mano: Carta[], turno: "jugador" | "croupier"): void {
-    let enMano: string = mano.map((carta) => carta.getCartaMostrada()).join(" | ");
-
-    console.log(`\nMano del ${turno}: | ${enMano} |`);
   }
 
   public juego(): void {
@@ -102,7 +96,7 @@ Su eleccion: `);
 
         if ((puntajeJugador) === 8 || puntajeJugador === 9) {//jugador mano natural
           console.log(`\nEl jugador tiene una mano natural! No se reparten mas cartas.`);
-          this.mostrarMano(crupierMano, "croupier");
+          this.mostrarMano(crupierMano, "crupier");
           console.log(`La suma de las cartas de la banca es: ${puntajeCrupier}`);
           if (puntajeJugador === puntajeCrupier) {
             console.log(`\nEmpate! El jugador y la banca tienen ${puntajeJugador} natural.`);
@@ -124,7 +118,7 @@ Su eleccion: `);
 
         if (puntajeCrupier === 8 || puntajeCrupier === 9) { //crupier mano natural
           console.log(`\nLa banca tiene una mano natural! No se reparten mas cartas.`);
-          this.mostrarMano(crupierMano, "croupier");
+          this.mostrarMano(crupierMano, "crupier");
           console.log(`\nLa suma de las cartas de la banca es: ${puntajeCrupier}`);
           this.mostrarMano(jugadorMano, "jugador");
           console.log(`\nLa suma de las cartas del jugador es: ${puntajeJugador}`);
@@ -153,7 +147,7 @@ Su eleccion: `);
         //reglas tercera carta crupier
         if (puntajeCrupier < 7) { //crupier menos de 7 tercera carta
           if (puntajeCrupier <= 2) { //crupier menos de 3 pide tercera
-            this.mostrarMano(crupierMano, "croupier");
+            this.mostrarMano(crupierMano, "crupier");
             console.log(`\nLa banca tiene ${puntajeCrupier} y debe tomar una tercera carta.`);
             const terceraCartaCrupier: Carta = this.getMazo().repartirCarta();
             console.log(`\nLa tercera carta de la banca es: ${terceraCartaCrupier.getCartaMostrada()}`);
@@ -163,7 +157,7 @@ Su eleccion: `);
               puntajeCrupier -= 10;
             }
           } else if (puntajeCrupier === 3 && jugadorMano.length === 3 && jugadorMano[2].calcularValor() !== 8) { //crupier tiene 3 y jugador con tres cartas y la tercera no es 8
-              this.mostrarMano(crupierMano, "croupier");
+              this.mostrarMano(crupierMano, "crupier");
               console.log(`\nLa banca tiene 3 y debe tomar una tercera carta porque la tercera carta del jugador no es un 8.`);
               const terceraCartaCrupier: Carta = this.getMazo().repartirCarta();
               console.log(`\nLa tercera carta de la banca es: ${terceraCartaCrupier.getCartaMostrada()}`);
@@ -173,7 +167,7 @@ Su eleccion: `);
                 puntajeCrupier -= 10;
               }
             } else if (puntajeCrupier === 4 && jugadorMano.length === 3 && [2, 3, 4, 5, 6, 7].includes(jugadorMano[2].calcularValor())) {//crupier tiene 4 y jugador con tres cartas y la tercera esta entre 2 y 7
-                this.mostrarMano(crupierMano, "croupier");
+                this.mostrarMano(crupierMano, "crupier");
                 console.log(`\nLa banca tiene 4 y debe tomar una tercera carta porque la tercera carta del jugador está entre 2 y 7.`);
                 const terceraCartaCrupier: Carta = this.getMazo().repartirCarta();
                 console.log(`\nLa tercera carta de la banca es: ${terceraCartaCrupier.getCartaMostrada()}`);
@@ -183,7 +177,7 @@ Su eleccion: `);
                   puntajeCrupier -= 10;
                 }
               } else if (puntajeCrupier === 5 && jugadorMano.length === 3 && [4, 5, 6, 7].includes(jugadorMano[2].calcularValor())) {//crupier tiene 5 y jugador con tres cartas y la tercera esta entre 4 y 7
-                  this.mostrarMano(crupierMano, "croupier");
+                  this.mostrarMano(crupierMano, "crupier");
                   console.log(`\nLa banca tiene 5 y debe tomar una tercera carta porque la tercera carta del jugador está entre 4 y 7.`);
                   const terceraCartaCrupier: Carta = this.getMazo().repartirCarta();
                   console.log(`\nLa tercera carta de la banca es: ${terceraCartaCrupier.getCartaMostrada()}`);
@@ -193,7 +187,7 @@ Su eleccion: `);
                     puntajeCrupier -= 10;
                   }
                 } else if (puntajeCrupier === 6 && jugadorMano.length === 3 && [6, 7].includes(jugadorMano[2].calcularValor())) {//crupier tiene 6 y jugador con tres cartas y la tercera es 6 o 7
-                    this.mostrarMano(crupierMano, "croupier");
+                    this.mostrarMano(crupierMano, "crupier");
                     console.log(`\nLa banca tiene 6 y debe tomar una tercera carta porque la tercera carta del jugador es 6 o 7.`);
                     const terceraCartaCrupier: Carta = this.getMazo().repartirCarta();
                     console.log(`\nLa tercera carta de la banca es: ${terceraCartaCrupier.getCartaMostrada()}`);
@@ -203,7 +197,7 @@ Su eleccion: `);
                       puntajeCrupier -= 10;
                     }
                   } else {//crupier tiene 7 o menos pero no puede pedir la tercera carta
-                      this.mostrarMano(crupierMano, "croupier");
+                      this.mostrarMano(crupierMano, "crupier");
                       console.log(`\nLa banca debe plantarse con un puntaje de ${puntajeCrupier}.`);
                   }
         }
@@ -230,6 +224,7 @@ Su eleccion: `);
         enJuego = false;
       }
       this.setMazo(new Mazo());
+      jugandoMano = true;
     }
   }
 

@@ -24,13 +24,13 @@ function main(){
   const tragamonedasBonus  = GameFactory.crearJuego({
     tipo: "tragamonedas-bonus",
     nombre: "Tragamonedas clasico con bonus",
-    simbolos: ["🍒", "🪙", "🔥"],
-    apuestaMin: 0, //si se le pone apuestaMin o max hay que agregar validaciones
+    simbolos: ["🍒", "💎", "🔥"],
+    apuestaMin: 0,
     apuestaMax: 0,
   });
   if (tragamonedasBonus instanceof TragamonedasBonus) {
     tragamonedasBonus.agregarBonus(new BonusGirosGratis("🔥", 3));
-    tragamonedasBonus.agregarBonus(new BonusGirosGratis("🪙", 2));
+    tragamonedasBonus.agregarBonus(new BonusGirosGratis("💎", 2));
     casino.ingresarJuego(tragamonedasBonus);
   }
   const bacara = GameFactory.crearJuego({

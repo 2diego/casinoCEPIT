@@ -1,6 +1,7 @@
 import { Juego } from "../models/Juego";
 import { Jugador } from "../models/Jugador";
 import { Mazo } from "../utils/Mazo";
+import { Carta } from "../utils/Carta";
 import {
   menuJuegos,
   solicitarApuesta,
@@ -147,6 +148,12 @@ export abstract class JuegoDeCartas implements Juego {
 
       this.juego();
     }
+  }
+
+  public mostrarMano(mano: Carta[], turno: "jugador" | "crupier"): void {
+    let enMano: string = mano.map((carta) => carta.getCartaMostrada()).join(" | ");
+
+    console.log(`\nMano del ${turno}: | ${enMano} |`);
   }
   
   abstract calcularPremio(tipoPremio:string): void;

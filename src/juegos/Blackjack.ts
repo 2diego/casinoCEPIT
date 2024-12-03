@@ -41,105 +41,62 @@ export class Blackjack extends JuegoDeCartas {
       let puntajeJugador: number = 0;
       let puntajeCrupier: number = 0;
 
-      puntajeJugador = jugadorMano[0].calcularValor() + jugadorMano[1].calcularValor();
-      puntajeCrupier = crupierMano[0].calcularValor();
+      puntajeJugador =
+        jugadorMano[0].calcularValor() + jugadorMano[1].calcularValor();
+      puntajeCrupier =
+        crupierMano[0].calcularValor() + crupierMano[1].calcularValor();
 
       let jugadorSePlanta: boolean = false;
       let JugadorBlackjack: boolean = false;
       let CrupierBlackjack: boolean = false;
 
       while (!jugadorSePlanta && !JugadorBlackjack && !CrupierBlackjack) {
-          // Verificar ganador por blackjack
-          if (puntajeJugador === 21) {
-            console.log("\nBLACKJACK!");
-            jugadorSePlanta = true;
-            JugadorBlackjack = true;
-            break;
-          }
-          
-          // Jugador no tiene blackjack y puede pedir carta
-          if (puntajeJugador < 21) {
-            // Turno del jugador
+        // Verificar ganador por blackjack
+        if (puntajeJugador === 21) {
+          console.log("\nBLACKJACK!");
+          jugadorSePlanta = true;
+          JugadorBlackjack = true;
+          break;
+        }
+
+        if (puntajeJugador === 22) {
+          jugadorMano[0].setValor(1);
+          puntajeJugador -= 10;
+        }
+        if (puntajeCrupier === 22) {
+          crupierMano[0].setValor(1);
+          puntajeCrupier -= 10;
+        }
+
+        // Jugador no tiene blackjack y puede pedir carta
+        while (puntajeJugador <= 21 && !jugadorSePlanta) {
+          // Turno del jugador
+          while (!jugadorSePlanta) {
             console.log(`\nSu puntaje es: ${puntajeJugador}`);
             let respuesta: string = pideCarta();
+            // Jugador planta
             if (respuesta.toLocaleLowerCase() === "n") {
-              // Jugador planta
               jugadorSePlanta = true;
               break;
-            } else {
-              while (respuesta.toLocaleLowerCase() === "s") {
-                // Jugador pide carta y bucle hasta que pierda o se plante
-                let carta: Carta = this.getMazo().repartirCarta();
-                jugadorMano.push(carta);
-                puntajeJugador +=
-                  jugadorMano[jugadorMano.length - 1].calcularValor();
-                console.log(carta.getCartaMostrada());
-                if (puntajeJugador > 21) {
-                  if (jugadorMano[0].getCartaMostrada() === "A") {
-                    // Si el jugador tiene un as y su puntaje es mayor a 21
-                    puntajeJugador -= 10;
-                  } else if (jugadorMano[1].getCartaMostrada() === "A") {
-                    puntajeJugador -= 10;
-                  } else if (
-                    jugadorMano[jugadorMano.length - 1].getCartaMostrada() === "A"
-                  ) {
-                    puntajeJugador -= 10;
-                  } else {
-                    console.log(`\nSu puntaje es: ${puntajeJugador}`);
-                    console.log(`\nPerdiste, su puntaje es mayor a 21`); // Jugador pierde
-                    break;
-                  }
-                }
-                console.log(`\nSu puntaje es: ${puntajeJugador}`);
-                respuesta = pideCarta();
-                if (respuesta.toLocaleLowerCase() === "n") {
-                  jugadorSePlanta = true;
-                  break;
+            }
+            // Jugador pide carta y bucle hasta que pierda o se plante
+            let carta: Carta = this.getMazo().repartirCarta();
+            jugadorMano.push(carta);
+            puntajeJugador +=
+              jugadorMano[jugadorMano.length - 1].calcularValor();
+            console.log(carta.getCartaMostrada());
+
+            while (puntajeJugador > 21 && !jugadorSePlanta) {
+              for (let i = 0; i < jugadorMano.length; i++) {
+                if (jugadorMano[i].getValor() === 11) {
+                  jugadorMano[i].setValor(1);
+                  puntajeJugador -= 10;
                 }
               }
-            }
-          }
-      }
-
-      if (jugadorSePlanta) {
-        // Jugador planta y prosigue el turno del Crupier
-        console.log(
-          `\nLa carta del Crupier es: ${crupierMano[1].getCartaMostrada()}`
-        ); // Mostrar segunda carta del Crupier
-        puntajeCrupier += crupierMano[1].calcularValor();
-        console.log(`\nEl Crupier tiene un puntaje de: ${puntajeCrupier}`);
-        if (puntajeCrupier === 21) {
-          // Crupier tiene blackjack
-          console.log(`\nEl Crupier tiene un blackjack`);
-          CrupierBlackjack = true;
-          break;
-        } else {
-          while (puntajeCrupier < 17) {
-            // Crupier pide carta
-            let carta: Carta = this.getMazo().repartirCarta();
-            crupierMano.push(carta);
-            puntajeCrupier +=
-              crupierMano[crupierMano.length - 1].calcularValor();
-            if (puntajeCrupier > 21) {
-              // Si el Crupier tiene un as y su puntaje es mayor a 21
-              if (crupierMano[0].getCartaMostrada() === "A") {
-                puntajeCrupier -= 10;
-              } else if (crupierMano[1].getCartaMostrada() === "A") {
-                puntajeCrupier -= 10;
-              } else if (
-                crupierMano[crupierMano.length - 1].getCartaMostrada() === "A"
-              ) {
-                puntajeCrupier -= 10;
-              } else {
-                console.log(
-                  `\nLa carta del Crupier es: ${crupierMano[
-                    crupierMano.length - 1
-                  ].getCartaMostrada()}`
-                ); // Mostrar ultima carta del Crupier
-                console.log(
-                  `\nEl Crupier tiene un puntaje de: ${puntajeCrupier}`
-                );
-                console.log("\nEl Crupier se paso de 21"); // Crupier pasa de 21
+              if (puntajeJugador > 21) {
+                console.log(`\nSu puntaje es: ${puntajeJugador}`);
+                console.log(`\nPerdiste, su puntaje es mayor a 21`); // Jugador pierde
+                jugadorSePlanta = true;
                 break;
               }
             }
@@ -147,7 +104,50 @@ export class Blackjack extends JuegoDeCartas {
         }
       }
 
+      if (jugadorSePlanta && !CrupierBlackjack) {
+        // Jugador planta y prosigue el turno del Crupier
+        console.log(
+          `\nLa carta del Crupier es: ${crupierMano[1].getCartaMostrada()}`
+        ); // Mostrar segunda carta del Crupier
+        console.log(`\nEl Crupier tiene un puntaje de: ${puntajeCrupier}`);
+        if (puntajeCrupier === 21) {
+          // Crupier tiene blackjack
+          console.log(`\nEl Crupier tiene un blackjack`);
+          CrupierBlackjack = true;
+        } else {
+          while (puntajeCrupier < 17 && puntajeJugador < 22) {
+            // Crupier pide carta
+            let carta: Carta = this.getMazo().repartirCarta();
+            crupierMano.push(carta);
+            puntajeCrupier += crupierMano[crupierMano.length - 1].calcularValor();
+            while (puntajeCrupier	 > 21) {
+              for (let i = 0; i < crupierMano.length; i++) {
+                if (crupierMano[i].getValor() === 11) {
+                  crupierMano[i].setValor(1);
+                  puntajeCrupier -= 10;
+                }
+              }
+              console.log(
+                `\nLa carta del Crupier es: ${crupierMano[
+                  crupierMano.length - 1
+                ].getCartaMostrada()}`
+              ); // Mostrar ultima carta del Crupier
+              console.log(
+                `\nEl Crupier tiene un puntaje de: ${puntajeCrupier}`
+              );
+            }
+          }
+          if (puntajeCrupier > 21) {
+          console.log("\nEl Crupier se paso de 21"); // Crupier pasa de 21
+          break;
+          }
+        }
+      }
+
+      //Hasta aca anda
+
       if (JugadorBlackjack && CrupierBlackjack) {
+        //calcularPremio(JugadorBlackjacl)
         // Ambos jugadores tienen blackjack
         console.log("\nEs un empate.");
         console.log(`\nSe devuelve $${this.getApuestaActual()} al jugador.`);
@@ -165,6 +165,7 @@ export class Blackjack extends JuegoDeCartas {
       }
 
       if (puntajeJugador <= 21 && puntajeCrupier <= 21) {
+        //calcularPremio
         // Validaciones cuando ambos jugadores tienen menos de 21
         if (puntajeJugador > puntajeCrupier) {
           console.log("\n¡Felicidades! Ganaste esta ronda.");

@@ -138,7 +138,7 @@ export function verInstrucciones(juego: Juego): void {
 }
 
 export function pideCarta(): string {
-  let carta: string = readline.question("\nDesea pedir carta (s/n): ");
+  let carta: string = readline.question("\nDesea pedir carta (s/n): ");//falta validar
   return carta.toLowerCase();
 }
 

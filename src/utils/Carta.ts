@@ -1,5 +1,3 @@
-import { Juego } from "../models/Juego";
-
 export class Carta {
   private simbolo: Palo;
   private valor: number;
@@ -23,6 +21,10 @@ export class Carta {
       return this.cartaMostrada;
   }
 
+  setValor (valor: number) {
+      this.valor = valor;
+  }
+
   mostrarCarta() {
       if (this.valor === 1) {
           return "A" + this.simbolo;
@@ -40,8 +42,10 @@ export class Carta {
   calcularValor(): number {
       let valorSinSimbolo: string = this.cartaMostrada.replace(/[^\dA-Z]/g, ""); 
       if (valorSinSimbolo === "A") {
+        this.valor = 11;
         return 11;
         } else if (valorSinSimbolo === "J" || valorSinSimbolo === "Q" || valorSinSimbolo === "K") {
+            this.valor = 10;
             return 10;
           }
       return parseInt(valorSinSimbolo);

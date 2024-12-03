@@ -166,7 +166,7 @@ export abstract class Tragamonedas implements Juego {
 
   abstract jugar(jugadores: Jugador[]): void;
 
-  public abstract apostar(inBonus: boolean): void;
+  public abstract apostar(): void;
  
-  protected abstract calcularPremio(lineasApostadas: number): void;
+  abstract calcularPremio(lineasApostadas: number, inBonus: boolean): void;
 }
