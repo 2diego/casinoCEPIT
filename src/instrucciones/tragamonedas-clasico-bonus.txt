@@ -1,0 +1,16 @@
+Inicio del Juego:
+Saldo Inicial: Cada jugador comienza con un saldo inicial que puede usar para apostar.
+Apuesta:
+Montos de Apuesta: Selecciona el monto de la apuesta que desee.
+Girar:
+Iniciar el Giro: Presiona el botón de "Girar" para hacer girar los carretes.
+Resultado:
+Símbolos: Los carretes se detendrán y mostrarán una combinación de símbolos.
+Premios:
+Pago: Si obtuviste una combinación ganadora, recibirás un premio.
+Sin Ganancia: Si no obtuviste una combinación ganadora, no recibirás ningún premio.
+Continuar Jugando:
+Decisión: Decide si quieres continuar jugando con tu saldo restante o si deseas salir del juego.
+Ejemplo de Combinaciones Ganadoras de Bonus.
+3 🔥 ganaras el bonus de 3 giros gratis.
+2 💎 ganaras el bonus de 2 giros gratis.

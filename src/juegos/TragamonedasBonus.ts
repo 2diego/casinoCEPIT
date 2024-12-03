@@ -39,7 +39,7 @@ export class TragamonedasBonus extends Tragamonedas {
     this.calcularPremio(lineasApostadas, inBonus);
   }
 
-  protected calcularPremio(
+  public calcularPremio(
     lineasApostadas: number,
     inBonus: boolean = false
   ): void {
