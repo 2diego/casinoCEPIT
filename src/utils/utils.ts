@@ -9,13 +9,10 @@ export function validarSaldoInicial(apuestaMin: number): number {
     if (saldoInicial === 0) {
       return 0;
     }
-    while (saldoInicial < apuestaMin) {
+    if (saldoInicial < apuestaMin) {
       console.log(`\nDebe ingresar un saldo igual o mayor a la apuesta minima ($${apuestaMin}) para jugar.`);
-      saldoInicial = readline.questionInt(`\nIngrese saldo mayor a $${apuestaMin} o 0 para elegir otro juego: `);
-      if (saldoInicial === 0) {
-        return 0;
+      return validarSaldoInicial(apuestaMin);
       }
-    }
     return saldoInicial;
 }
 
@@ -45,6 +42,9 @@ export function solicitarRecarga(juego: Juego, jugador: Jugador): boolean {
       console.error('\nEl saldo debe ser mayor a 0.');
       solicitarRecarga(juego, jugador);
     } else {
+        if (!jugador.cargarJuego(nuevoSaldo)) {
+          solicitarRecarga(juego, jugador);
+        }
         if (jugador.cargarJuego(nuevoSaldo)) {
           juego.ingresarSaldo(nuevoSaldo);
           console.log(`\nSe ingreso $${nuevoSaldo} al juego.\n\nSaldo actual: $${juego.getSaldoDisponible()}`);

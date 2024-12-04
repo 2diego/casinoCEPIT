@@ -98,12 +98,11 @@ export abstract class JuegoDeCartas implements Juego {
     }
 
     let cargar: boolean = jugador.cargarJuego(saldoInicial);
-    if (!cargar) {
-      console.log(`\nNo cuenta con saldo suficiente para jugar ${this.getNombre()}.`);
-      return;
-    }
-
+    if(cargar){
     this.ingresarSaldo(saldoInicial);
+    } else {
+      this.setSaldoInicial(jugador);
+    }
   }
 
   public validarApuesta(monto: number): boolean {
