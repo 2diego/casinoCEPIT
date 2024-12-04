@@ -47,7 +47,7 @@ export class GameFactory {
       case "bacara":
         return new Bacara(detalles.nombre, detalles.apuestaMin, detalles.apuestaMax);
       default:
-        console.log("Juego no encontrado");
+        console.log("\nJuego no encontrado");
         return null;
     }
   }

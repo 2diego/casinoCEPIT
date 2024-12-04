@@ -46,7 +46,7 @@ export class Bacara extends JuegoDeCartas {
           1-Jugador
           2-Banca
           3-Empate
-Su eleccion: `);
+\nSu eleccion: `);
 
         while (elegirApuesta < 1 || elegirApuesta > 3) {
           console.log("\nEl numero ingresado debe ser entre 1 y 3, intente nuevamente.");
@@ -54,7 +54,7 @@ Su eleccion: `);
             1-Jugador
             2-Banca
             3-Empate
-Su eleccion: `);
+\nSu eleccion: `);
         }
 
         switch (elegirApuesta) {
