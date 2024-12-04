@@ -121,6 +121,7 @@ export class Blackjack extends JuegoDeCartas {
           crupierMano.push(carta);
           puntajeCrupier += crupierMano[crupierMano.length - 1].calcularValor();
           console.log(`\nLa carta del Crupier es: ${crupierMano[crupierMano.length - 1].getCartaMostrada()}`); // Mostrar ultima carta del Crupier
+          console.log(`\nEl Crupier tiene un puntaje de: ${puntajeCrupier}`);
           while (puntajeCrupier	 > 21) {
             for (let i = 0; i < crupierMano.length; i++) {
               if (crupierMano[i].getValor() === 11) {
@@ -128,14 +129,13 @@ export class Blackjack extends JuegoDeCartas {
                 puntajeCrupier -= 10;
               }
             }
-          }
-          console.log(`\nEl Crupier tiene un puntaje de: ${puntajeCrupier}`);
-          if (puntajeCrupier > 21) {
-          console.log("\nEl Crupier se paso de 21"); // Crupier pasa de 21
-          break;
+            if (puntajeCrupier > 21) {
+            console.log("\nEl Crupier se paso de 21"); // Crupier pasa de 21
+            break;
           }
         }
       }
+    }
 
       //Hasta aca anda
 
@@ -156,7 +156,12 @@ export class Blackjack extends JuegoDeCartas {
         console.log(`\nHas perdido $${this.getApuestaActual()}.`);
         this.ingresarSaldo(this.calcularPremio("perder"));
       }
-
+      if(jugadorSePlanta && !JugadorBlackjack && puntajeCrupier > 21){
+        console.log("\n¡Felicidades! Ganaste esta ronda.");
+        console.log(`\nHas ganado $${this.calcularPremio("x2")}.`);
+        this.ingresarSaldo(this.calcularPremio("x2"));
+        
+      }
       if (puntajeJugador <= 21 && puntajeCrupier <= 21) {
         //calcularPremio
         // Validaciones cuando ambos jugadores tienen menos de 21
