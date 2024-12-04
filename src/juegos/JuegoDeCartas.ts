@@ -2,15 +2,7 @@ import { Juego } from "../models/Juego";
 import { Jugador } from "../models/Jugador";
 import { Mazo } from "../utils/Mazo";
 import { Carta } from "../utils/Carta";
-import {
-  menuJuegos,
-  solicitarApuesta,
-  solicitarRecarga,
-  solicitarSaldo,
-  validarSaldoInicial,
-  verInstrucciones,
-  elegirJugador,
-} from "../utils/utils";
+import {  menuJuegos, solicitarApuesta, solicitarRecarga, solicitarSaldo, validarSaldoInicial, verInstrucciones, elegirJugador,} from "../utils/utils";
 
 export abstract class JuegoDeCartas implements Juego {
   private nombre: string;
@@ -107,9 +99,7 @@ export abstract class JuegoDeCartas implements Juego {
 
     let cargar: boolean = jugador.cargarJuego(saldoInicial);
     if (!cargar) {
-      console.log(
-        `\nNo cuenta con saldo suficiente para jugar ${this.getNombre()}.`
-      );
+      console.log(`\nNo cuenta con saldo suficiente para jugar ${this.getNombre()}.`);
       return;
     }
 
@@ -138,14 +128,9 @@ export abstract class JuegoDeCartas implements Juego {
   }
 
   apostar(): void {
-    this.setApuestaActual(
-      solicitarApuesta(this, this.getApuestaMin(), this.getApuestaMax())
-    );
+    this.setApuestaActual(solicitarApuesta(this, this.getApuestaMin(), this.getApuestaMax()));
     if (this.validarApuesta(this.getApuestaActual())) {
-      this.setSaldoDisponible(
-        this.getSaldoDisponible() - this.getApuestaActual()
-      );
-
+      this.setSaldoDisponible(this.getSaldoDisponible() - this.getApuestaActual());
       this.juego();
     }
   }
@@ -155,9 +140,9 @@ export abstract class JuegoDeCartas implements Juego {
 
     console.log(`\nMano del ${turno}: | ${enMano} |`);
   }
-  
-  abstract calcularPremio(tipoPremio:string): void;
-  
+
+  abstract calcularPremio(tipoPremio: string): void;
+
   abstract juego(): void;
 
 
@@ -195,7 +180,7 @@ export abstract class JuegoDeCartas implements Juego {
           jugando = false;
           return;
         default:
-          console.error("Opcion no valida.");
+          console.error("\nOpcion no valida.");
           break;
       }
 

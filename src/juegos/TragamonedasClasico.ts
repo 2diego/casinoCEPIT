@@ -1,6 +1,6 @@
 import { Tragamonedas } from "./Tragamonedas";
 import { Jugador } from "../models/Jugador";
-import {solicitarApuesta, solicitarRecarga, menuJuegos, verInstrucciones} from "../utils/utils";
+import {solicitarApuesta, solicitarRecarga, menuJuegos, verInstrucciones, elegirJugador} from "../utils/utils";
 
 export class TragamonedasClasico extends Tragamonedas {
   constructor(nombre: string, simbolos: string[] = [], apuestaMinima: number = 0, apuestaMaxima: number = 0) {
@@ -46,11 +46,16 @@ export class TragamonedasClasico extends Tragamonedas {
     this.ingresarSaldo(premio);
   }
 
-  public jugar(jugador: Jugador[]): void {
+  public jugar(jugadores: Jugador[]): void {
 
     console.log(`\n---------- Bienvenido a ${this.getNombre()} ----------`);
 
-    this.setSaldoInicial(jugador[0]);
+    let jugador: Jugador = jugadores[0];
+    if (jugadores.length > 1) {
+      jugador = elegirJugador(jugadores);
+    }
+
+    this.setSaldoInicial(jugador);
     if (this.getSaldoDisponible() === 0) {
       return;
     }
@@ -64,13 +69,13 @@ export class TragamonedasClasico extends Tragamonedas {
           this.apostar();
           break;
         case 2:
-          this.agregarSaldo(jugador[0]);
+          this.agregarSaldo(jugador);
           break;
         case 3:
           verInstrucciones(this);
           break;
         case 4:
-          this.retirarSaldo(jugador[0]);
+          this.retirarSaldo(jugador);
           console.log("\nGracias por jugar.");
           jugando = false;
           return;
@@ -80,8 +85,8 @@ export class TragamonedasClasico extends Tragamonedas {
       }
 
       if (this.getSaldoDisponible() < this.getApuestaMin()) {
-        if (!solicitarRecarga(this, jugador[0])) {
-          this.retirarSaldo(jugador[0]);
+        if (!solicitarRecarga(this, jugador)) {
+          this.retirarSaldo(jugador);
           jugando = false;
         };
 
