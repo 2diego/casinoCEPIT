@@ -174,12 +174,8 @@ export class Blackjack extends JuegoDeCartas {
           this.ingresarSaldo(this.calcularPremio("empate"));
         }
       }
-
-      let respuesta = juegaDeNuevo();
-      if (respuesta.toLowerCase() !== "s") {
-        enBlackjack = false;
-      }
       this.setMazo(new Mazo());
+      enBlackjack = false;
     }
   }
 }
