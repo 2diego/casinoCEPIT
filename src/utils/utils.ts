@@ -121,7 +121,10 @@ Confirmar apuesta (s/n): `);
     if (confirmar.toLowerCase() === 's') {
       return true;
     } else {
+      //agregue que muestre que se cancela la apuesta poniendo no
+      console.log("\nSe ha cancelado la apuesta.");
         return false;
+        
     }
 }
 

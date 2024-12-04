@@ -1,15 +1,7 @@
 import { Bonus } from "../bonus/Bonus";
 import { Tragamonedas } from "./Tragamonedas";
 import { Jugador } from "../models/Jugador";
-import {
-  elegirJugador,
-  solicitarRecarga,
-  menuJuegos,
-  solicitarApuesta,
-  solicitarLineas,
-  confirmarApuesta,
-  verInstrucciones,
-} from "../utils/utils";
+import {elegirJugador,solicitarRecarga,menuJuegos,solicitarApuesta,solicitarLineas,confirmarApuesta,verInstrucciones} from "../utils/utils";
 import { lineasPosibles } from "../utils/lineas";
 
 export class TragamonedasBonus extends Tragamonedas {
@@ -24,34 +16,28 @@ export class TragamonedasBonus extends Tragamonedas {
   }
 
   public apostar(inBonus: boolean = false): void {
-    this.setApuestaActual(
-      solicitarApuesta(this, this.getApuestaMin(), this.getApuestaMax())
-    );
+    this.setApuestaActual(solicitarApuesta(this, this.getApuestaMin(), this.getApuestaMax()));
     let lineasApostadas: number = solicitarLineas();
     let totalApostado: number = this.getApuestaActual() * lineasApostadas;
     if (this.validarApuesta(totalApostado)) {
       if (confirmarApuesta(this.getApuestaActual(), lineasApostadas)) {
         this.setSaldoDisponible(this.getSaldoDisponible() - totalApostado);
+        //movi los metodos de abajo adentro del segundo if, estaban en el primero y lo que hacia es que cuando ponia no en la confirmacion, jugaba igual
+        this.girar();
+        this.mostrarResultado();
+        this.calcularPremio(lineasApostadas, inBonus);
       }
     }
-    this.girar();
-    this.mostrarResultado();
-    this.calcularPremio(lineasApostadas, inBonus);
   }
 
-  public calcularPremio(
-    lineasApostadas: number,
-    inBonus: boolean = false
-  ): void {
+  public calcularPremio(lineasApostadas: number,inBonus: boolean = false): void {
     let premio: number = 0;
     let lineas: number[][][] = lineasPosibles[lineasApostadas];
     let bonusPorActivar: Bonus[] = [];
 
     for (let i = 0; i < lineasApostadas; i++) {
       //for (let linea of lineas) {
-      let simbolos: string[] = lineas[i].map(
-        ([fila, columna]) => this.getResultadoActual()[fila][columna]
-      );
+      let simbolos: string[] = lineas[i].map(([fila, columna]) => this.getResultadoActual()[fila][columna]);
 
       if (simbolos.every((simbolo) => simbolo === simbolos[0])) {
         let multiplicador: number = this.getSimbolos().indexOf(simbolos[0]) + 2;
@@ -115,7 +101,7 @@ Premio por linea: $${premioPorLinea}`);
           jugando = false;
           return;
         default:
-          console.error("Opcion no valida.");
+          console.error("\nOpcion no valida.");
           break;
       }
       if (this.getSaldoDisponible() <= this.getApuestaMin()) {
