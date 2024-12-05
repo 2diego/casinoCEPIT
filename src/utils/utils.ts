@@ -1,33 +1,32 @@
 import { Jugador } from '../models/Jugador';
 import { Juego } from '../models/Juego';
-import { Blackjack } from '../juegos/Blackjack';
 import * as readline from 'readline-sync';
 import fs from 'fs';
 
 //Utils juegos
 export function validarSaldoInicial(apuestaMin: number): number {
   let saldoInicial: number = readline.questionInt('\nPara jugar ingrese su saldo inicial o 0 para elegir otro juego: ');
-    if (saldoInicial === 0) {
-      return 0;
-    }
-    if (saldoInicial < apuestaMin) {
-      console.log(`\nDebe ingresar un saldo igual o mayor a la apuesta minima ($${apuestaMin}) para jugar.`);
-      return validarSaldoInicial(apuestaMin);
-      }
-    return saldoInicial;
+  if (saldoInicial === 0) {
+    return 0;
+  }
+  if (saldoInicial < apuestaMin) {
+    console.log(`\nDebe ingresar un saldo igual o mayor a la apuesta minima ($${apuestaMin}) para jugar.`);
+    return validarSaldoInicial(apuestaMin);
+  }
+  return saldoInicial;
 }
 
 export function elegirJugador(jugadores: Jugador[]): Jugador {
   console.log(`\nElija un jugador para sentarse: `);
-      for (let i = 0; i < jugadores.length; i++) {
-        console.log(`${i + 1} - ${jugadores[i].getNombre()}`);
-      }
-      const indexJugador: number = readline.questionInt("Ingrese el numero del jugador: ") - 1;
-      if (indexJugador < 0 || indexJugador >= jugadores.length) {
-        console.log("Opcion invalida. Intente nuevamente.");
-        return elegirJugador(jugadores);
-      }
-      return jugadores[indexJugador];
+  for (let i = 0; i < jugadores.length; i++) {
+    console.log(`${i + 1} - ${jugadores[i].getNombre()}`);
+  }
+  const indexJugador: number = readline.questionInt("\nIngrese el numero del jugador: ") - 1;
+  if (indexJugador < 0 || indexJugador >= jugadores.length) {
+    console.log("\nOpcion invalida. Intente nuevamente.");
+    return elegirJugador(jugadores);
+  }
+  return jugadores[indexJugador];
 }
 
 
@@ -35,16 +34,16 @@ export function solicitarRecarga(juego: Juego, jugador: Jugador): boolean {
   console.log(`\nEl monto del jugador es: $${jugador.getMonto()} `);
   let nuevoSaldo: number = readline.questionInt(`\nNo tiene saldo suficiente para continuar jugando. Saldo actual: $${juego.getSaldoDisponible()}.
 \nIngrese saldo a depositar o 0 para retirar fondos y salir: `);
-  
+
   if (nuevoSaldo === 0) {
     console.log(`\nGracias por jugar ${juego.getNombre()}. Saliendo al menu principal..`);
     return false;
   }
-  
+
   if (nuevoSaldo < 0) {
-      console.error('\nEl saldo debe ser mayor a 0.');
-      return solicitarRecarga(juego, jugador);
-    }
+    console.error('\nEl saldo debe ser mayor a 0.');
+    return solicitarRecarga(juego, jugador);
+  }
 
   const saldoCargado = jugador.cargarJuego(nuevoSaldo);
 
@@ -63,7 +62,7 @@ export function solicitarRecarga(juego: Juego, jugador: Jugador): boolean {
 
 export function menuJuegos(juego: Juego): number {
   let accion: number = 0
-  
+
   while (accion < 1 || accion > 4) {
     accion = readline.questionInt(`\nElija una opcion:
       1 - Apostar
@@ -74,7 +73,7 @@ export function menuJuegos(juego: Juego): number {
 Saldo disponible: $${juego.getSaldoDisponible()}
       
 Su eleccion: `);
-    
+
     if (accion < 1 || accion > 4) {
       console.log('\nOpcion invalida. Intente nuevamente.');
     }
@@ -88,12 +87,12 @@ export function solicitarApuesta(juego: Juego, apuestaMin: number, apuestaMax: n
     if (juego.getNombre() === "Tragamonedas clasico con bonus") {
       return " por linea";
     } else if (juego.getNombre() === "Tragamonedas clasico") {
-        return ` ($${apuestaMin} o $${apuestaMax})`;
-      } else if (juego.getNombre() === "Blackjack" || juego.getNombre() === "Bacara") {
-          return ` entre $${juego.getApuestaMin()} y $${juego.getApuestaMax()}`;
-        }
-      return "";
+      return ` ($${apuestaMin} o $${apuestaMax})`;
+    } else if (juego.getNombre() === "Blackjack" || juego.getNombre() === "Bacara") {
+      return ` entre $${juego.getApuestaMin()} y $${juego.getApuestaMax()}`;
     }
+    return "";
+  }
 
   let apuesta: number = readline.questionInt(`\nIngrese el monto que desea apostar${frase()}: `);
 
@@ -103,7 +102,7 @@ export function solicitarApuesta(juego: Juego, apuestaMin: number, apuestaMax: n
 export function solicitarLineas(): number {
   let lineas: number = 0
 
-  while (lineas < 1 || lineas > 5 || lineas === 4 ) {
+  while (lineas < 1 || lineas > 5 || lineas === 4) {
     lineas = readline.questionInt(`\nIngrese el numero de lineas que desea apostar:
       1 - Linea central
       2 - Lineas externas
@@ -111,7 +110,7 @@ export function solicitarLineas(): number {
       5 - Lineas y diagonales
   
 Su eleccion: `);
-    
+
     if (lineas < 1 || lineas > 5 || lineas === 4) {
       console.log('\nOpcion invalida. Intente nuevamente.');
     }
@@ -124,19 +123,18 @@ export function confirmarApuesta(apuesta: number, lineasApostadas: number): bool
   let confirmar: string = readline.question(`\nEsta apostando ${lineasApostadas} lineas a $${apuesta} por linea.
 Total apuesta: $${apuesta * lineasApostadas}.
 Confirmar apuesta (s/n): `);
-  
-    if (confirmar.toLowerCase() === 's') {
-      return true;
-    } else {
-      //agregue que muestre que se cancela la apuesta poniendo no
-      console.log("\nSe ha cancelado la apuesta.");
-        return false;
-        
-    }
+
+  if (confirmar.toLowerCase() === 's') {
+    return true;
+  } else {
+    console.log("\nSe ha cancelado la apuesta.");
+    return false;
+
+  }
 }
 
 export function solicitarSaldo(): number {
-  const saldo :number = readline.questionInt("\nIngrese el saldo a agregar: ");
+  const saldo: number = readline.questionInt("\nIngrese el saldo a agregar: ");
   return saldo;
 }
 
@@ -148,7 +146,7 @@ export function verInstrucciones(juego: Juego): void {
 }
 
 export function pideCarta(): string {
-  let carta: string = readline.question("\nDesea pedir carta (s/n): ");//falta validar
+  let carta: string = readline.question("\nDesea pedir carta (s/n): ");
   while (carta !== "s" && carta !== "n") {
     console.log("\nOpcion invalida. Intente nuevamente.");
     carta = readline.question("\nDesea pedir carta (s/n): ");
@@ -170,6 +168,6 @@ export function crearJugador(): Jugador {
     console.log('\nEl monto inicial debe ser mayor a 0.');
     montoJugador = readline.questionInt('\nIngrese monto inicial: ');
   }
-  
+
   return new Jugador(nombreJugador, montoJugador);
 }
