@@ -32,27 +32,33 @@ export function elegirJugador(jugadores: Jugador[]): Jugador {
 
 
 export function solicitarRecarga(juego: Juego, jugador: Jugador): boolean {
-  console.log(`\nEl monto del jugador es: ${jugador.getMonto()} `);
+  console.log(`\nEl monto del jugador es: $${jugador.getMonto()} `);
   let nuevoSaldo: number = readline.questionInt(`\nNo tiene saldo suficiente para continuar jugando. Saldo actual: $${juego.getSaldoDisponible()}.
 \nIngrese saldo a depositar o 0 para retirar fondos y salir: `);
   
   if (nuevoSaldo === 0) {
     console.log(`\nGracias por jugar ${juego.getNombre()}. Saliendo al menu principal..`);
     return false;
-  } else if (nuevoSaldo < 0) {
+  }
+  
+  if (nuevoSaldo < 0) {
       console.error('\nEl saldo debe ser mayor a 0.');
-      solicitarRecarga(juego, jugador);
-    } else {
-        if (!jugador.cargarJuego(nuevoSaldo)) {
-          solicitarRecarga(juego, jugador);
-        }
-        if (jugador.cargarJuego(nuevoSaldo)) {
-          juego.ingresarSaldo(nuevoSaldo);
-          console.log(`\nSe ingreso $${nuevoSaldo} al juego.\n\nSaldo actual: $${juego.getSaldoDisponible()}`);
-          return true;
-        }
-      }
-      return false;
+      return solicitarRecarga(juego, jugador);
+    }
+
+  const saldoCargado = jugador.cargarJuego(nuevoSaldo);
+
+  if (!saldoCargado) {
+    return solicitarRecarga(juego, jugador);
+  }
+
+  if (saldoCargado) {
+    juego.ingresarSaldo(nuevoSaldo);
+    console.log(`\nSe ingresó $${nuevoSaldo} al juego.\nSaldo actual en el juego: $${juego.getSaldoDisponible()}`);
+    return true;
+  }
+
+  return false;
 }
 
 export function menuJuegos(juego: Juego): number {
@@ -153,11 +159,6 @@ export function pideCarta(): string {
 export function apuestaSegura(): number {
   let seguro: number = readline.questionInt(`\nIngrese la apuesta segura: `);
   return seguro;
-}
-
-export function juegaDeNuevo(): string {
-  let jugarDeNuevo: string = readline.question("\nDesea jugar de nuevo (s/n): ");
-  return jugarDeNuevo.toLowerCase();
 }
 
 //Utils main

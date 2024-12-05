@@ -1,6 +1,6 @@
 import { Mazo } from "../utils/Mazo";
 import { Carta } from "../utils/Carta";
-import { pideCarta, juegaDeNuevo, apuestaSegura } from "../utils/utils";
+import { pideCarta, apuestaSegura } from "../utils/utils";
 import { JuegoDeCartas } from "./JuegoDeCartas";
 
 export class Blackjack extends JuegoDeCartas {

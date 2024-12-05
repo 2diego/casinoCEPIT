@@ -1,7 +1,6 @@
 import { JuegoDeCartas } from "./JuegoDeCartas";
 import { Carta } from "../utils/Carta";
 import { Mazo } from "../utils/Mazo";
-import { juegaDeNuevo } from "../utils/utils";
 import * as readlineSync from "readline-sync";
 
 export class Bacara extends JuegoDeCartas {
@@ -146,8 +145,8 @@ export class Bacara extends JuegoDeCartas {
       }
       
       //reglas tercera carta crupier
-      if (puntajeCrupier < 7) { //crupier menos de 7 tercera carta
-        if (puntajeCrupier <= 2) { //crupier menos de 3 pide tercera
+      if (jugadorMano.length === 2) { // Si el jugador no tomó una tercera carta
+        if (puntajeCrupier <= 5) { //menos de 5 pide siempre
           this.mostrarMano(crupierMano, "crupier");
           console.log(`\nLa banca tiene ${puntajeCrupier} y debe tomar una tercera carta.`);
           const terceraCartaCrupier: Carta = this.getMazo().repartirCarta();
@@ -157,9 +156,15 @@ export class Bacara extends JuegoDeCartas {
           while (puntajeCrupier > 9) {
             puntajeCrupier -= 10;
           }
-        } else if (puntajeCrupier === 3 && jugadorMano.length === 3 && jugadorMano[2].calcularValor() !== 8) { //crupier tiene 3 y jugador con tres cartas y la tercera no es 8
+        } else if (puntajeCrupier >= 6) {
+          this.mostrarMano(crupierMano, "crupier");
+          console.log(`\nLa banca tiene ${puntajeCrupier} y debe plantarse.`);
+        }
+      } else {
+        if (puntajeCrupier < 7) { //crupier menos de 7 y jugador tiene 3 cartas
+          if (puntajeCrupier <= 2) { //crupier menos de 3 pide tercera
             this.mostrarMano(crupierMano, "crupier");
-            console.log(`\nLa banca tiene 3 y debe tomar una tercera carta porque la tercera carta del jugador no es un 8.`);
+            console.log(`\nLa banca tiene ${puntajeCrupier} y debe tomar una tercera carta.`);
             const terceraCartaCrupier: Carta = this.getMazo().repartirCarta();
             console.log(`\nLa tercera carta de la banca es: ${terceraCartaCrupier.getCartaMostrada()}`);
             crupierMano.push(terceraCartaCrupier);
@@ -167,9 +172,9 @@ export class Bacara extends JuegoDeCartas {
             while (puntajeCrupier > 9) {
               puntajeCrupier -= 10;
             }
-          } else if (puntajeCrupier === 4 && jugadorMano.length === 3 && [2, 3, 4, 5, 6, 7].includes(jugadorMano[2].calcularValor())) {//crupier tiene 4 y jugador con tres cartas y la tercera esta entre 2 y 7
+          } else if (puntajeCrupier === 3 && jugadorMano.length === 3 && jugadorMano[2].calcularValor() !== 8) { //crupier tiene 3 y jugador con tres cartas y la tercera no es 8
               this.mostrarMano(crupierMano, "crupier");
-              console.log(`\nLa banca tiene 4 y debe tomar una tercera carta porque la tercera carta del jugador está entre 2 y 7.`);
+              console.log(`\nLa banca tiene 3 y debe tomar una tercera carta porque la tercera carta del jugador no es un 8.`);
               const terceraCartaCrupier: Carta = this.getMazo().repartirCarta();
               console.log(`\nLa tercera carta de la banca es: ${terceraCartaCrupier.getCartaMostrada()}`);
               crupierMano.push(terceraCartaCrupier);
@@ -177,9 +182,9 @@ export class Bacara extends JuegoDeCartas {
               while (puntajeCrupier > 9) {
                 puntajeCrupier -= 10;
               }
-            } else if (puntajeCrupier === 5 && jugadorMano.length === 3 && [4, 5, 6, 7].includes(jugadorMano[2].calcularValor())) {//crupier tiene 5 y jugador con tres cartas y la tercera esta entre 4 y 7
+            } else if (puntajeCrupier === 4 && jugadorMano.length === 3 && [2, 3, 4, 5, 6, 7].includes(jugadorMano[2].calcularValor())) {//crupier tiene 4 y jugador con tres cartas y la tercera esta entre 2 y 7
                 this.mostrarMano(crupierMano, "crupier");
-                console.log(`\nLa banca tiene 5 y debe tomar una tercera carta porque la tercera carta del jugador está entre 4 y 7.`);
+                console.log(`\nLa banca tiene 4 y debe tomar una tercera carta porque la tercera carta del jugador está entre 2 y 7.`);
                 const terceraCartaCrupier: Carta = this.getMazo().repartirCarta();
                 console.log(`\nLa tercera carta de la banca es: ${terceraCartaCrupier.getCartaMostrada()}`);
                 crupierMano.push(terceraCartaCrupier);
@@ -187,9 +192,9 @@ export class Bacara extends JuegoDeCartas {
                 while (puntajeCrupier > 9) {
                   puntajeCrupier -= 10;
                 }
-              } else if (puntajeCrupier === 6 && jugadorMano.length === 3 && [6, 7].includes(jugadorMano[2].calcularValor())) {//crupier tiene 6 y jugador con tres cartas y la tercera es 6 o 7
+              } else if (puntajeCrupier === 5 && jugadorMano.length === 3 && [4, 5, 6, 7].includes(jugadorMano[2].calcularValor())) {//crupier tiene 5 y jugador con tres cartas y la tercera esta entre 4 y 7
                   this.mostrarMano(crupierMano, "crupier");
-                  console.log(`\nLa banca tiene 6 y debe tomar una tercera carta porque la tercera carta del jugador es 6 o 7.`);
+                  console.log(`\nLa banca tiene 5 y debe tomar una tercera carta porque la tercera carta del jugador está entre 4 y 7.`);
                   const terceraCartaCrupier: Carta = this.getMazo().repartirCarta();
                   console.log(`\nLa tercera carta de la banca es: ${terceraCartaCrupier.getCartaMostrada()}`);
                   crupierMano.push(terceraCartaCrupier);
@@ -197,10 +202,21 @@ export class Bacara extends JuegoDeCartas {
                   while (puntajeCrupier > 9) {
                     puntajeCrupier -= 10;
                   }
-                } else {//crupier tiene 7 o menos pero no puede pedir la tercera carta
+                } else if (puntajeCrupier === 6 && jugadorMano.length === 3 && [6, 7].includes(jugadorMano[2].calcularValor())) {//crupier tiene 6 y jugador con tres cartas y la tercera es 6 o 7
                     this.mostrarMano(crupierMano, "crupier");
-                    console.log(`\nLa banca debe plantarse con un puntaje de ${puntajeCrupier}.`);
-                }
+                    console.log(`\nLa banca tiene 6 y debe tomar una tercera carta porque la tercera carta del jugador es 6 o 7.`);
+                    const terceraCartaCrupier: Carta = this.getMazo().repartirCarta();
+                    console.log(`\nLa tercera carta de la banca es: ${terceraCartaCrupier.getCartaMostrada()}`);
+                    crupierMano.push(terceraCartaCrupier);
+                    puntajeCrupier += terceraCartaCrupier.calcularValor();
+                    while (puntajeCrupier > 9) {
+                      puntajeCrupier -= 10;
+                    }
+                  } else {//crupier tiene 7 o menos pero no puede pedir la tercera carta
+                      this.mostrarMano(crupierMano, "crupier");
+                      console.log(`\nLa banca debe plantarse con un puntaje de ${puntajeCrupier}.`);
+                  }
+        }
       }
 
       
