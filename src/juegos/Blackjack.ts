@@ -161,6 +161,7 @@ export class Blackjack extends JuegoDeCartas {
                 crupierMano[i].setValor(1);
                 puntajeCrupier -= 10;
                 console.log(`\nEl As ahora vale 1`);
+                console.log(`\nEl Crupier tiene un puntaje de: ${puntajeCrupier}`);
               }
             }
             if (puntajeCrupier > 21) {
