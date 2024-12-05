@@ -47,7 +47,7 @@ function main(){
     tipo: "blackjack",
     nombre: "Blackjack",
     apuestaMin: 50,
-    apuestaMax: 200,
+    apuestaMax: 1000,
   });
   if (blackjack) {
     casino.ingresarJuego(blackjack);
