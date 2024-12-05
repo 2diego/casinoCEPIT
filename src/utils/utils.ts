@@ -1,5 +1,6 @@
 import { Jugador } from '../models/Jugador';
 import { Juego } from '../models/Juego';
+import { Blackjack } from '../juegos/Blackjack';
 import * as readline from 'readline-sync';
 import fs from 'fs';
 
@@ -142,7 +143,16 @@ export function verInstrucciones(juego: Juego): void {
 
 export function pideCarta(): string {
   let carta: string = readline.question("\nDesea pedir carta (s/n): ");//falta validar
+  while (carta !== "s" && carta !== "n") {
+    console.log("\nOpcion invalida. Intente nuevamente.");
+    carta = readline.question("\nDesea pedir carta (s/n): ");
+  }
   return carta.toLowerCase();
+}
+
+export function apuestaSegura(): number {
+  let seguro: number = readline.questionInt(`\nIngrese la apuesta segura: `);
+  return seguro;
 }
 
 export function juegaDeNuevo(): string {

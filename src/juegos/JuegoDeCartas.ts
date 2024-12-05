@@ -6,11 +6,11 @@ import {  menuJuegos, solicitarApuesta, solicitarRecarga, solicitarSaldo, valida
 
 export abstract class JuegoDeCartas implements Juego {
   private nombre: string;
-  private saldoDisponible: number;
+  protected saldoDisponible: number;
   private mazo: Mazo;
   private apuestaMin: number;
   private apuestaMax: number;
-  private apuestaActual: number = 0;
+  protected apuestaActual: number = 0;
   private jugadores: Jugador[] = [];
 
   constructor(nombre: string, apuestaMin: number = 0, apuestaMax: number = 0) {

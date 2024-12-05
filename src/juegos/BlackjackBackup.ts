@@ -208,14 +208,14 @@ export class Blackjack implements Juego {
             puntajeCrupier = crupierMano[0].calcularValor();
 
             let jugadorSePlanta: boolean = false;
-            let JugadorBlackjack: boolean = false;
-            let CrupierBlackjack: boolean = false;
+            let jugadorBlackjack: boolean = false;
+            let crupierBlackjack: boolean = false;
 
             // Verificar ganador por blackjack    
             if (puntajeJugador === 21) {
                 console.log("\nBLACKJACK!");
                 jugadorSePlanta = true;
-                JugadorBlackjack = true;
+                jugadorBlackjack = true;
                 break;
             }
             // Jugador no tiene blackjack y puede pedir carta
@@ -261,7 +261,7 @@ export class Blackjack implements Juego {
                 console.log(`\nEl Crupier tiene un puntaje de: ${puntajeCrupier}`);
                 if (puntajeCrupier === 21) {                        // Crupier tiene blackjack
                     console.log(`\nEl Crupier tiene un blackjack`);
-                    CrupierBlackjack = true;
+                    crupierBlackjack = true;
                     break;
                 } else {
                     while (puntajeCrupier < 17) {                      // Crupier pide carta
@@ -286,15 +286,15 @@ export class Blackjack implements Juego {
                 }
             }
 
-            if (JugadorBlackjack && CrupierBlackjack) {                                     // Ambos jugadores tienen blackjack
+            if (jugadorBlackjack && crupierBlackjack) {                                     // Ambos jugadores tienen blackjack
                 console.log("\nEs un empate.");
                 console.log(`\nSe devuelve $${this.apuestaActual} al jugador.`);
                 this.ingresarSaldo(this.calcularPremio("empate"));
-            } else if (JugadorBlackjack && !CrupierBlackjack) {                             // El jugador tiene blackjack
+            } else if (jugadorBlackjack && !crupierBlackjack) {                             // El jugador tiene blackjack
                 console.log("\n¡Felicidades! Ganaste esta ronda.");
                 console.log(`\nHas ganado $${this.calcularPremio("x5")}.`);
                 this.ingresarSaldo(this.calcularPremio("x5"));
-            } else if (!JugadorBlackjack && CrupierBlackjack) {                             // El crupier tiene blackjack
+            } else if (!jugadorBlackjack && crupierBlackjack) {                             // El crupier tiene blackjack
                 console.log("\nEl Crupier ganó esta ronda.");
                 console.log(`\nHas perdido $${this.apuestaActual}.`);
                 this.ingresarSaldo(this.calcularPremio("perder"));
