@@ -19,10 +19,10 @@ export abstract class Tragamonedas implements Juego {
     this.simbolos = simbolos;
     this.saldoDisponible = 0;
     if (apuestaMinima < 0 || apuestaMaxima < 0) {
-      console.error("\nLas apuestas minima y maxima no pueden ser negativas.");
+      throw new Error("\nLas apuestas minima y maxima no pueden ser negativas.");
     }
     if (apuestaMaxima > 0 && apuestaMinima > apuestaMaxima) {
-      console.error("\nLa apuesta minima no puede ser mayor que la apuesta maxima.");
+      throw new Error("\nLa apuesta minima no puede ser mayor que la apuesta maxima.");
     }
     this.apuestaMin = apuestaMinima;
     this.apuestaMax = apuestaMaxima;
