@@ -20,22 +20,20 @@ export class Blackjack extends JuegoDeCartas {
 
   juego(): void {
     let enBlackjack: boolean = true;
-
+    console.log("afuera"+this.getMazo().lenght());
+    
     while (enBlackjack) {
       let jugadorMano: Carta[] = [];
       let crupierMano: Carta[] = [];
-
+      console.log("adentro"+this.getMazo().lenght());
       for (let i = 0; i < 2; i++) {
         jugadorMano.push(this.getMazo().repartirCarta());
         crupierMano.push(this.getMazo().repartirCarta());
       }
 
       jugadorMano.forEach((carta) =>
-        console.log("Su carta es: " + carta.getCartaMostrada())
-      );
-      console.log(
-        "La primera carta del Crupier es: " + crupierMano[0].getCartaMostrada()
-      );
+        console.log("Su carta es: " + carta.getCartaMostrada()));
+      console.log("La primera carta del Crupier es: " + crupierMano[0].getCartaMostrada());
       console.log(`\nCarta oculta del Crupier`);
 
       let puntajeJugador: number = 0;
@@ -72,6 +70,7 @@ export class Blackjack extends JuegoDeCartas {
         } else if (seguro > 0 && posbileBlackjack === 10 || posbileBlackjack === 11 || posbileBlackjack === 12 || posbileBlackjack === 13) {
           console.log(`\nLa carta oculta del Crupier es: ${crupierMano[1].getCartaMostrada()}`);
           console.log(`\nEl Crupier tiene Blackjack.`);
+          console.log(`\nHas ganado $${seguro}.`);
           this.apuestaActual = seguro;
           this.ingresarSaldo(this.calcularPremio("x2"));
           enBlackjack = false;
@@ -106,9 +105,12 @@ export class Blackjack extends JuegoDeCartas {
             }
             // Jugador pide carta y bucle hasta que pierda o se plante
             let carta: Carta = this.getMazo().repartirCarta();
+            if(carta){
             jugadorMano.push(carta);
-            puntajeJugador +=
-              jugadorMano[jugadorMano.length - 1].calcularValor();
+           }else{
+            console.log("no se pudo repartir la carta");
+           }
+            puntajeJugador += jugadorMano[jugadorMano.length - 1].calcularValor();
             console.log(`\nSu carta es: ` + carta.getCartaMostrada());
 
             while (puntajeJugador > 21 && !jugadorSePlanta) {

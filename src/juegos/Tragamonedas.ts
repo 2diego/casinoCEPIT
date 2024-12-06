@@ -74,6 +74,7 @@ export abstract class Tragamonedas implements Juego {
   }
 
   public agregarSaldo(jugador: Jugador): number {
+    console.log(`\nEl monto disponible del jugador ${jugador.getNombre()} es: $${jugador.getMonto()} `);
     const saldo: number = solicitarSaldo();
     if (jugador.cargarJuego(saldo)) {
       this.ingresarSaldo(saldo);
@@ -99,6 +100,7 @@ export abstract class Tragamonedas implements Juego {
   }
 
   protected setSaldoInicial(jugador: Jugador): void {
+    console.log(`\nEl monto del jugador ${jugador.getNombre()} es: $${jugador.getMonto()} `); 
     let saldoInicial: number = validarSaldoInicial(this.getApuestaMin());
     if (saldoInicial === 0) {
       return;

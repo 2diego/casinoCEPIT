@@ -21,7 +21,9 @@ export class Mazo  {
             }
         }
     }
-
+    lenght(): number {
+        return this.mazo.length
+    }
     mezclarMazo() {
         for (let i = this.mazo.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
