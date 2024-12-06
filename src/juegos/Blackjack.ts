@@ -71,13 +71,13 @@ export class Blackjack extends JuegoDeCartas {
           console.log(`\nNo se realizo ninguna apuesta segura, el juego continua.`);
         } else if (seguro > 0 && posbileBlackjack === 10 || posbileBlackjack === 11 || posbileBlackjack === 12 || posbileBlackjack === 13) {
           console.log(`\nLa carta oculta del Crupier es: ${crupierMano[1].getCartaMostrada()}`);
-          console.log(`\nEl Crupier tiene blackjack.`);
+          console.log(`\nEl Crupier tiene Blackjack.`);
           this.apuestaActual = seguro;
           this.ingresarSaldo(this.calcularPremio("x2"));
           enBlackjack = false;
           continue;
         } else {
-          console.log(`\nEl Crupier no tiene blackjack has perdido $${seguro}.`);
+          console.log(`\nEl Crupier no tiene Blackjack has perdido $${seguro}.`);
           console.log(`\nEl juego continua.`);
         }
       }
@@ -142,7 +142,7 @@ export class Blackjack extends JuegoDeCartas {
       console.log(`\nEl Crupier tiene un puntaje de: ${puntajeCrupier}`);
       if (puntajeCrupier === 21) {
         // Crupier tiene blackjack
-        console.log(`\nEl Crupier tiene un blackjack`);
+        console.log(`\nEl Crupier tiene un Blackjack`);
         crupierBlackjack = true;
       }
 
@@ -172,10 +172,10 @@ export class Blackjack extends JuegoDeCartas {
         }
       }
 
-      //Hasta aca anda
+   
 
       if (jugadorBlackjack && crupierBlackjack) {
-        //calcularPremio(JugadorBlackjacl)
+        //calcularPremio(JugadorBlackjack)
         // Ambos jugadores tienen blackjack
         console.log("\nEs un empate.");
         console.log(`\nSe devuelve $${this.getApuestaActual()} al jugador.`);
@@ -191,6 +191,7 @@ export class Blackjack extends JuegoDeCartas {
         console.log(`\nHas perdido $${this.getApuestaActual()}.`);
         this.ingresarSaldo(this.calcularPremio("perder"));
       }
+      //validacion cuando el jugador se planta(no tiene blackjack) y el crupier se pasa de 21
       if (jugadorSePlanta && !jugadorBlackjack && puntajeCrupier > 21) {
         console.log("\n¡Felicidades! Ganaste esta ronda.");
         console.log(`\nHas ganado $${this.calcularPremio("x2")}.`);

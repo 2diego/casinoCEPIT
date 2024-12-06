@@ -21,11 +21,9 @@ export abstract class JuegoDeCartas implements Juego {
       console.error("Las apuestas minima y maxima no pueden ser negativas.");
     }
     if (apuestaMax > 0 && apuestaMin > apuestaMax) {
-      console.error(
-        "La apuesta minima no puede ser mayor que la apuesta maxima."
-      );
+      console.error("La apuesta minima no puede ser mayor que la apuesta maxima.");
     }
-    this.apuestaMin = apuestaMin; //probar validaciones en constructor
+    this.apuestaMin = apuestaMin;
     this.apuestaMax = apuestaMax;
   }
 
@@ -73,10 +71,8 @@ export abstract class JuegoDeCartas implements Juego {
   }
 
   public agregarSaldo(jugador: Jugador): number {
-    //Si el manejo de saldo es igual para todos los juegos
-    const saldo: number = solicitarSaldo(); //hacer una clase SaldoDisponible como si fuera un repository
+    const saldo: number = solicitarSaldo(); 
     if (jugador.cargarJuego(saldo)) {
-      //para manejar la logica de saldo
       this.ingresarSaldo(saldo);
       console.log(`\nSe ingreso $${saldo} al juego.`);
     }

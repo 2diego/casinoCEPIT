@@ -14,13 +14,11 @@ export class Jugador {
     return this.monto;
   }
   
-  //setFondosDisponibles si queremos agregar una opcion para ingresar fondos a la app
-
   public sumarGanancia(saldo: number): void {
     this.monto += saldo;
   }
 
-  public cargarJuego(saldo: number): boolean {//comprarFichas
+  public cargarJuego(saldo: number): boolean {
     if (saldo > this.monto) {
       console.error(`\nMonto insuficiente para cargar $${saldo} de saldo.\n\nMonto disponible: $${this.monto}`);
       return false;

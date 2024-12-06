@@ -221,7 +221,7 @@ export class Bacara extends JuegoDeCartas {
 
       
       console.log(`\nPuntaje final del jugador: ${puntajeJugador}`);
-      console.log(`Puntaje final de la banca: ${puntajeCrupier}`);
+      console.log(`\nPuntaje final de la banca: ${puntajeCrupier}`);
       
       if (puntajeJugador > puntajeCrupier) {
         console.log(`\nEl jugador gana con ${puntajeJugador} contra ${puntajeCrupier}.`);

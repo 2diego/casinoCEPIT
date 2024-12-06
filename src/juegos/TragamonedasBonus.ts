@@ -22,7 +22,6 @@ export class TragamonedasBonus extends Tragamonedas {
     if (this.validarApuesta(totalApostado)) {
       if (confirmarApuesta(this.getApuestaActual(), lineasApostadas)) {
         this.setSaldoDisponible(this.getSaldoDisponible() - totalApostado);
-        //movi los metodos de abajo adentro del segundo if, estaban en el primero y lo que hacia es que cuando ponia no en la confirmacion, jugaba igual
         this.girar();
         this.mostrarResultado();
         this.calcularPremio(lineasApostadas, inBonus);

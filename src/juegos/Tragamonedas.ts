@@ -12,17 +12,17 @@ export abstract class Tragamonedas implements Juego {
   protected columnas: number;
   private apuestaActual: number = 0;
   private resultadoActual: string[][] = [];
- 
+
 
   constructor(nombre: string, simbolos: string[] = [], apuestaMinima: number = 0, apuestaMaxima: number = 0) {
     this.nombre = nombre;
     this.simbolos = simbolos;
     this.saldoDisponible = 0;
     if (apuestaMinima < 0 || apuestaMaxima < 0) {
-      throw new Error("\nLas apuestas minima y maxima no pueden ser negativas.");
+      console.error("\nLas apuestas minima y maxima no pueden ser negativas.");
     }
     if (apuestaMaxima > 0 && apuestaMinima > apuestaMaxima) {
-      throw new Error("\nLa apuesta minima no puede ser mayor que la apuesta maxima.");
+      console.error("\nLa apuesta minima no puede ser mayor que la apuesta maxima.");
     }
     this.apuestaMin = apuestaMinima;
     this.apuestaMax = apuestaMaxima;
@@ -49,11 +49,11 @@ export abstract class Tragamonedas implements Juego {
   public getSimbolos(): string[] {
     return this.simbolos;
   }
-  
+
   getResultadoActual(): string[][] {
     return this.resultadoActual;
   }
-  
+
   public getFilas(): number {
     return this.filas;
   }
@@ -61,18 +61,18 @@ export abstract class Tragamonedas implements Juego {
   public getColumnas(): number {
     return this.columnas;
   }
-  
+
   getApuestaActual(): number {
     return this.apuestaActual;
   }
-  
+
   public ingresarSaldo(saldo: number): void {
     if (saldo < 0) {
       console.error("\nEl saldo ingresado no puede ser negativo.");
     }
-    this.saldoDisponible += saldo; 
+    this.saldoDisponible += saldo;
   }
-  
+
   public agregarSaldo(jugador: Jugador): number {
     const saldo: number = solicitarSaldo();
     if (jugador.cargarJuego(saldo)) {
@@ -105,8 +105,8 @@ export abstract class Tragamonedas implements Juego {
     }
 
     let cargar: boolean = jugador.cargarJuego(saldoInicial);
-    if(cargar){
-    this.ingresarSaldo(saldoInicial);
+    if (cargar) {
+      this.ingresarSaldo(saldoInicial);
     } else {
       this.setSaldoInicial(jugador);
     }
@@ -121,7 +121,7 @@ export abstract class Tragamonedas implements Juego {
     return this.getSimbolos()[index];
   }
 
-  public girar():  void {
+  public girar(): void {
     let resultado: string[][] = [];
 
     for (let i = 0; i < this.getFilas(); i++) {
@@ -135,10 +135,10 @@ export abstract class Tragamonedas implements Juego {
     this.resultadoActual = resultado;
   }
 
-  
+
   public mostrarResultado(): void {
     console.log(`\n`)
-    for (let i = 0; i < this.getFilas() ; i++) {
+    for (let i = 0; i < this.getFilas(); i++) {
       console.log(`${this.getResultadoActual()[i][0]} | ${this.getResultadoActual()[i][1]} | ${this.getResultadoActual()[i][2]}`);
     }
   }
@@ -166,6 +166,6 @@ export abstract class Tragamonedas implements Juego {
   abstract jugar(jugadores: Jugador[]): void;
 
   public abstract apostar(): void;
- 
+
   abstract calcularPremio(lineasApostadas: number, inBonus: boolean): void;
 }
