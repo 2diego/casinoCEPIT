@@ -19,6 +19,7 @@ export class Blackjack extends JuegoDeCartas {
   }
 
   juego(): void {
+    this.setMazo(new Mazo());
     let enBlackjack: boolean = true;
 
     while (enBlackjack) {
@@ -31,20 +32,15 @@ export class Blackjack extends JuegoDeCartas {
       }
 
       jugadorMano.forEach((carta) =>
-        console.log("Su carta es: " + carta.getCartaMostrada())
-      );
-      console.log(
-        "La primera carta del Crupier es: " + crupierMano[0].getCartaMostrada()
-      );
+      console.log("Su carta es: " + carta.getCartaMostrada()));
+      console.log("La primera carta del Crupier es: " + crupierMano[0].getCartaMostrada());
       console.log(`\nCarta oculta del Crupier`);
 
       let puntajeJugador: number = 0;
       let puntajeCrupier: number = 0;
 
-      puntajeJugador =
-        jugadorMano[0].calcularValor() + jugadorMano[1].calcularValor();
-      puntajeCrupier =
-        crupierMano[0].calcularValor() + crupierMano[1].calcularValor();
+      puntajeJugador = jugadorMano[0].calcularValor() + jugadorMano[1].calcularValor();
+      puntajeCrupier = crupierMano[0].calcularValor() + crupierMano[1].calcularValor();
 
       let jugadorSePlanta: boolean = false;
       let jugadorBlackjack: boolean = false;
@@ -69,7 +65,7 @@ export class Blackjack extends JuegoDeCartas {
         }
         if (seguro === 0) {
           console.log(`\nNo se realizo ninguna apuesta segura, el juego continua.`);
-        } else if (seguro > 0 && posbileBlackjack === 10 || posbileBlackjack === 11 || posbileBlackjack === 12 || posbileBlackjack === 13) {
+        } else if (seguro > 0 && posbileBlackjack === 10) {
           console.log(`\nLa carta oculta del Crupier es: ${crupierMano[1].getCartaMostrada()}`);
           console.log(`\nEl Crupier tiene Blackjack.`);
           this.apuestaActual = seguro;
@@ -107,8 +103,7 @@ export class Blackjack extends JuegoDeCartas {
             // Jugador pide carta y bucle hasta que pierda o se plante
             let carta: Carta = this.getMazo().repartirCarta();
             jugadorMano.push(carta);
-            puntajeJugador +=
-              jugadorMano[jugadorMano.length - 1].calcularValor();
+            puntajeJugador += jugadorMano[jugadorMano.length - 1].calcularValor();
             console.log(`\nSu carta es: ` + carta.getCartaMostrada());
 
             while (puntajeJugador > 21 && !jugadorSePlanta) {
@@ -214,7 +209,7 @@ export class Blackjack extends JuegoDeCartas {
           this.ingresarSaldo(this.calcularPremio("empate"));
         }
       }
-      this.setMazo(new Mazo());
+      
       enBlackjack = false;
     }
   }
