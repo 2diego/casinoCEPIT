@@ -18,10 +18,10 @@ export abstract class JuegoDeCartas implements Juego {
     this.saldoDisponible = 0;
     this.mazo = new Mazo();
     if (apuestaMin < 0 || apuestaMax < 0) {
-      console.error("Las apuestas minima y maxima no pueden ser negativas.");
+      throw new Error("Las apuestas minima y maxima no pueden ser negativas.");
     }
     if (apuestaMax > 0 && apuestaMin > apuestaMax) {
-      console.error("La apuesta minima no puede ser mayor que la apuesta maxima.");
+      throw new Error("La apuesta minima no puede ser mayor que la apuesta maxima.");
     }
     this.apuestaMin = apuestaMin;
     this.apuestaMax = apuestaMax;
