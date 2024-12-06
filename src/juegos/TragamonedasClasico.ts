@@ -76,7 +76,7 @@ export class TragamonedasClasico extends Tragamonedas {
           break;
         case 4:
           this.retirarSaldo(jugador);
-          console.log("\nGracias por jugar.");
+          console.log(`\nGracias por jugar ${this.getNombre()}.`);
           jugando = false;
           return;
         default:
