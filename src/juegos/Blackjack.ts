@@ -69,6 +69,7 @@ export class Blackjack extends JuegoDeCartas {
           console.log(`\nLa carta oculta del Crupier es: ${crupierMano[1].getCartaMostrada()}`);
           console.log(`\nEl Crupier tiene Blackjack.`);
           this.apuestaActual = seguro;
+          console.log(`\nHas ganado $${seguro}`);
           this.ingresarSaldo(this.calcularPremio("x2"));
           enBlackjack = false;
           continue;
