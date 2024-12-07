@@ -10,49 +10,65 @@ import * as readline from "readline-sync";
 function main(){
   const casino = Casino.getInstance();
   
-  const tragamonedas = GameFactory.crearJuego({
-    tipo: "tragamonedas-clasico",
-    nombre: "Tragamonedas clasico",
-    simbolos: ["🍒", "🍋","7️⃣", "💎", "🍇"],
-    apuestaMin: 10,
-    apuestaMax: 100,
-  });
-  if (tragamonedas) {
-    casino.ingresarJuego(tragamonedas);
+  try {
+    const tragamonedas = GameFactory.crearJuego({
+      tipo: "tragamonedas-clasico",
+      nombre: "Tragamonedas clasico",
+      simbolos: ["🍒", "🍋", "7️⃣", "💎", "🍇"],
+      apuestaMin: 10,
+      apuestaMax: 100,
+    });
+    if (tragamonedas) {
+      casino.ingresarJuego(tragamonedas);
+    }
+  } catch (error) {
+    console.error("Error al crear el juego Tragamonedas clasico:", (error as Error).message);
   }
-
-  const tragamonedasBonus  = GameFactory.crearJuego({
-    tipo: "tragamonedas-bonus",
-    nombre: "Tragamonedas bonus",
-    simbolos: ["🍒", "💎", "🔥"],
-    apuestaMin: 0,
-    apuestaMax: 0,
-  });
-  if (tragamonedasBonus instanceof TragamonedasBonus) {
-    tragamonedasBonus.agregarBonus(new BonusGirosGratis("🔥", 3));
-    tragamonedasBonus.agregarBonus(new BonusGirosGratis("💎", 2));
-    casino.ingresarJuego(tragamonedasBonus);
+  
+  try {
+    const tragamonedasBonus = GameFactory.crearJuego({
+      tipo: "tragamonedas-bonus",
+      nombre: "Tragamonedas bonus",
+      simbolos: ["🍒", "💎", "🔥"],
+      apuestaMin: 0,
+      apuestaMax: 0,
+    });
+    if (tragamonedasBonus instanceof TragamonedasBonus) {
+      tragamonedasBonus.agregarBonus(new BonusGirosGratis("🔥", 3));
+      tragamonedasBonus.agregarBonus(new BonusGirosGratis("💎", 2));
+      casino.ingresarJuego(tragamonedasBonus);
+    }
+  } catch (error) {
+    console.error("Error al crear el juego Tragamonedas bonus:", (error as Error).message);
   }
-  const bacara = GameFactory.crearJuego({
-    tipo: "bacara",
-    nombre: "Bacara",
-    apuestaMin: 100,
-    apuestaMax: 10000,
-  });
-  if (bacara) {
-    casino.ingresarJuego(bacara);
+  
+  try {
+    const bacara = GameFactory.crearJuego({
+      tipo: "bacara",
+      nombre: "Bacara",
+      apuestaMin: 100,
+      apuestaMax: 10000,
+    });
+    if (bacara) {
+      casino.ingresarJuego(bacara);
+    }
+  } catch (error) {
+    console.error("Error al crear el juego Bacara:", (error as Error).message);
   }
-
-  const blackjack = GameFactory.crearJuego({
-    tipo: "blackjack",
-    nombre: "Blackjack",
-    apuestaMin: 50,
-    apuestaMax: 1000,
-  });
-  if (blackjack) {
-    casino.ingresarJuego(blackjack);
+  
+  try {
+    const blackjack = GameFactory.crearJuego({
+      tipo: "blackjack",
+      nombre: "Blackjack",
+      apuestaMin: 50,
+      apuestaMax: 1000,
+    });
+    if (blackjack) {
+      casino.ingresarJuego(blackjack);
+    }
+  } catch (error) {
+    console.error("Error al crear el juego Blackjack:", (error as Error).message);
   }
-
   
   console.log(`\n---------- Bienvenido al Casino CEPIT ----------`);
 
